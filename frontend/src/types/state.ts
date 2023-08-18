@@ -13,7 +13,8 @@ export const initialState: AppStateType = { // this should be replaced with what
             avatar:"https://www.dndbeyond.com/avatars/20479/332/637677702146463037.jpeg",
             level:"5",
             race: "Harengon",
-            notes: "My character!!"
+            notes: "My character!!",
+            desc: "Just a cheeky ol rabbit"
         },
         {
             name:"Jean Pierre",
@@ -21,7 +22,8 @@ export const initialState: AppStateType = { // this should be replaced with what
             avatar:"",
             level:"5",
             race: "Human",
-            notes: ""
+            notes: "",
+            desc: "he's french damnit"
         }
     ],
     selectedCharacter: 0

@@ -4,5 +4,6 @@ export const basicCharacter = {
     level: "1",
     avatar: "",
     race: "Race",
-    notes: ""
+    notes: "",
+    desc: "Description"
 }

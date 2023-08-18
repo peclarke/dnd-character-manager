@@ -1,11 +1,16 @@
 import Card from "@mui/material/Card";
 import "./char.css"
-import { CardContent, Typography, Grid, Avatar, TextField } from "@mui/material";
+import { CardContent, Typography, Grid, Avatar, TextField, Modal, Box, Button } from "@mui/material";
 import { AppState } from "../../main";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 const EssentialInfo = (props: Character) => {
     const {fullState, setState} = useContext(AppState)
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const [avatarUrl, setAvatarUrl] = useState("");
+    const openAvatarModal = () => setModalOpen(true);
+    const closeAvatarModal = () => {setModalOpen(false); setAvatarUrl("")};
 
     const updateCharacter = (value: string, field: string) => {
         const newCharacters = fullState.characters.map((character, i) => {
@@ -26,6 +31,22 @@ const EssentialInfo = (props: Character) => {
     }
 
     return (
+    <>
+    <Modal
+        open={modalOpen}
+        onClose={closeAvatarModal}
+    >
+        <Box className="avatarModal">
+            <h2 id="parent-modal-title">Change Avatar</h2>
+            <p id="parent-modal-description">
+            Insert an image link below and hit submit to change the avatar for <strong>{fullState.characters[fullState.selectedCharacter].name}</strong>
+            </p>
+            <div style={{display: "flex", flexDirection: "column", gap: "1vh"}}>
+                <TextField value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder={"URL for character avatar"}/>
+                <Button variant="contained" onClick={() => { updateCharacter(avatarUrl, "avatar"); closeAvatarModal(); }}>Update</Button>
+            </div>
+        </Box>
+    </Modal>
     <Card variant="outlined" sx={{
         marginLeft: "3vw",
         marginRight: "3vw"
@@ -40,10 +61,13 @@ const EssentialInfo = (props: Character) => {
                     justifyContent: "left",
                     alignItems: "center"
                 }}>
-                    <Avatar alt={props.name} src={props.avatar} sx={{
-                        width: "80%",
-                        height: "100%"
-                    }}></Avatar>
+                    <Avatar alt={props.name} src={props.avatar} onClick={openAvatarModal}
+                        sx={{
+                            width: "80%",
+                            height: "100%",
+                            cursor: "pointer"
+                        }}>
+                    </Avatar>
                 </Grid>
                 <Grid item xs={9} sx={{
                     display: "flex",
@@ -76,12 +100,22 @@ const EssentialInfo = (props: Character) => {
                         />
                     </Typography>
                     <Typography variant="body2">
-                        Just a cheeky ol rabbit
+                        <input 
+                            value={props.desc} 
+                            type="string" 
+                            disabled={false} 
+                            className="essential-input" 
+                            onChange={(e) => updateCharacter(e.target.value, "desc")}
+                            style={{
+                                width: "100%"
+                            }}
+                        />
                     </Typography>
                 </Grid>
             </Grid>
         </CardContent>
     </Card>
+    </>
     )
 }
 

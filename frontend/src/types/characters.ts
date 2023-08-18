@@ -7,4 +7,5 @@ type Character = {
 
     // app specific
     notes: string;
+    desc: string;
 }
