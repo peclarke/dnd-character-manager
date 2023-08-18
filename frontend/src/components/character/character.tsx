@@ -5,6 +5,26 @@ import { AppState } from "../../main";
 import { useContext } from "react";
 
 const EssentialInfo = (props: Character) => {
+    const {fullState, setState} = useContext(AppState)
+
+    const updateCharacter = (value: string, field: string) => {
+        const newCharacters = fullState.characters.map((character) => {
+            if (character.name === props.name) {
+                return {
+                    ...character,
+                    [field]: value
+                }
+            } else {
+                return character
+            }
+        })
+
+        setState({
+            ...fullState,
+            characters: newCharacters
+        })
+    }
+
     return (
     <Card variant="outlined" sx={{
         marginLeft: "3vw",
@@ -21,7 +41,7 @@ const EssentialInfo = (props: Character) => {
                     alignItems: "center"
                 }}>
                     <Avatar alt={props.name} src={props.avatar} sx={{
-                        width: "65%",
+                        width: "80%",
                         height: "100%"
                     }}></Avatar>
                 </Grid>
@@ -31,10 +51,29 @@ const EssentialInfo = (props: Character) => {
                     flexDirection: "column"
                 }}>
                     <Typography variant="h5" component="div">
-                        {props.name}
+                        <input 
+                            value={props.name} 
+                            type="string" 
+                            disabled={false} 
+                            className="essential-input" 
+                            onChange={(e) => updateCharacter(e.target.value, "name")}
+                        />
                     </Typography>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                        {props.race}, {props.class}
+                    <Typography sx={{ mb: 1.5, display: "flex", flexDirection: "column" }} color="text.secondary">
+                        <input 
+                            value={props.race} 
+                            type="string" 
+                            disabled={false} 
+                            className="essential-input" 
+                            onChange={(e) => updateCharacter(e.target.value, "race")}
+                        />
+                        <input 
+                            value={props.class} 
+                            type="string" 
+                            disabled={false} 
+                            className="essential-input" 
+                            onChange={(e) => updateCharacter(e.target.value, "class")}
+                        />
                     </Typography>
                     <Typography variant="body2">
                         Just a cheeky ol rabbit

@@ -62,3 +62,18 @@
     background-color: white;
     border-bottom: 1px solid silver;
 }
+
+.essential-input {
+    border: 0px solid blue;
+    display: inline-block;
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+    width: inherit;
+    line-height: inherit;
+    vertical-align: inherit;
+    text-align: left;
+    color: inherit;
+    font: inherit;
+    background: none;
+}

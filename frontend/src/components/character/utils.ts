@@ -1,8 +1,8 @@
 export const basicCharacter = {
-    name: "New Character",
-    class: "na",
+    name: "FName LName",
+    class: "Class",
     level: "1",
     avatar: "",
-    race: "",
+    race: "Race",
     notes: ""
 }
