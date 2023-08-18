@@ -8,8 +8,8 @@ const EssentialInfo = (props: Character) => {
     const {fullState, setState} = useContext(AppState)
 
     const updateCharacter = (value: string, field: string) => {
-        const newCharacters = fullState.characters.map((character) => {
-            if (character.name === props.name) {
+        const newCharacters = fullState.characters.map((character, i) => {
+            if (fullState.selectedCharacter === i) {
                 return {
                     ...character,
                     [field]: value
@@ -89,8 +89,8 @@ const Notes = (props: Character) => {
     const {fullState, setState} = useContext(AppState)
 
     const updateNotes = (newNote: string) => {
-        const newCharacters = fullState.characters.map((character) => {
-            if (character.name === props.name) {
+        const newCharacters = fullState.characters.map((character, i) => {
+            if (fullState.selectedCharacter === i) {
                 return {
                     ...character,
                     notes: newNote
