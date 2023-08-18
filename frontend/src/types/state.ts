@@ -12,14 +12,16 @@ export const initialState: AppStateType = { // this should be replaced with what
             class:"Ranger / Rogue",
             avatar:"https://www.dndbeyond.com/avatars/20479/332/637677702146463037.jpeg",
             level:"5",
-            race: "Harengon"
+            race: "Harengon",
+            notes: "My character!!"
         },
         {
             name:"Jean Pierre",
             class:"Paladin",
             avatar:"",
             level:"5",
-            race: "Human"
+            race: "Human",
+            notes: ""
         }
     ],
     selectedCharacter: 0

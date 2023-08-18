@@ -1,6 +1,6 @@
 import Card from "@mui/material/Card";
 import "./char.css"
-import { CardContent, Typography, Grid, Avatar } from "@mui/material";
+import { CardContent, Typography, Grid, Avatar, TextField } from "@mui/material";
 import { AppState } from "../../main";
 import { useContext } from "react";
 
@@ -46,6 +46,51 @@ const EssentialInfo = (props: Character) => {
     )
 }
 
+const Notes = (props: Character) => {
+    const {fullState, setState} = useContext(AppState)
+
+    const updateNotes = (newNote: string) => {
+        const newCharacters = fullState.characters.map((character) => {
+            if (character.name === props.name) {
+                return {
+                    ...character,
+                    notes: newNote
+                }
+            } else {
+                return character
+            }
+        })
+
+        setState({
+            ...fullState,
+            characters: newCharacters
+        })
+    }
+
+    return (
+        <Card variant="outlined" sx={{
+            marginLeft: "3vw",
+            marginRight: "3vw"
+        }}>
+            <CardContent>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                    Player Notes
+                </Typography>
+                <TextField
+                    id="standard-multiline-static"
+                    multiline
+                    rows={20}
+                    placeholder="Write some notes about this character here"
+                    variant="standard"
+                    fullWidth={true}
+                    value={props.notes}
+                    onChange={(e) => updateNotes(e.target.value)}
+                    />
+            </CardContent>
+        </Card>
+        )
+}
+
 const CharacterData = () => {
     const {fullState, setState} = useContext(AppState)
     const characterData = fullState.characters[fullState.selectedCharacter];
@@ -53,6 +98,7 @@ const CharacterData = () => {
     return (
         <div className="characterData">
             <EssentialInfo {...characterData}/>
+            <Notes {...characterData}/>
         </div>
     )
 }

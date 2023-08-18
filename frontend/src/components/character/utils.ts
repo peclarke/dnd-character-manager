@@ -3,5 +3,6 @@ export const basicCharacter = {
     class: "na",
     level: "1",
     avatar: "",
-    race: ""
+    race: "",
+    notes: ""
 }

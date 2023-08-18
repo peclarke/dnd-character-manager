@@ -4,4 +4,7 @@ type Character = {
     class: string;
     level: string;
     race: string;
+
+    // app specific
+    notes: string;
 }

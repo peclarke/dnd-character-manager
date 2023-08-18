@@ -11,7 +11,8 @@ const CharacterGroup = () => {
     const addNewCharacter = () => {
         setState({
             ...fullState,
-            characters: [...fullState.characters, basicCharacter]
+            characters: [...fullState.characters, basicCharacter],
+            selectedCharacter: fullState.characters.length
         })
     }
 
