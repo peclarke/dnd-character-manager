@@ -1,0 +1,63 @@
+.characterData {
+    background-color: blue;
+    height: 100%;
+    width: 100%;
+    padding-top: 3vh;
+    /* padding-left: 3vw; */
+    /* padding-right: 3vw; */
+}
+
+.charname {
+    font-weight: bold;
+    font-size: 18px;
+
+}
+
+.card-avatar {
+    height: 50%;
+    border-radius: 50%;
+    position: static;
+    /* z-index: 0; */
+}
+
+.character-card {
+    background-color: white;
+    padding: 20px;
+    cursor: pointer;
+    border-bottom: 1px solid silver;
+}
+
+.character-card:hover {
+    background-color: #f9f0fe;
+}
+
+.levelback {
+    /* background-color: black; */
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid black;
+    text-align: center;
+    line-height:35px;
+}
+
+.add-character {
+    background-color: rgb(251, 251, 251);
+    padding: 20px;
+    cursor: pointer;
+    border-bottom: 1px solid rgb(219, 219, 219);
+}
+
+.add-character>svg {
+    font-size: 30px;
+    color: silver;
+}
+
+.add-character:hover>svg {
+    color: black;
+}
+
+.add-character:hover {
+    background-color: white;
+    border-bottom: 1px solid silver;
+}
