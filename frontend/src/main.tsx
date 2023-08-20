@@ -1,11 +1,7 @@
 import React, { createContext } from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './screens/app.tsx'
-// import Login from './screens/login.tsx'
 import { AppStateType, initialState } from './types/state.ts'
-// Import the functions you need from the SDKs you need
-// import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
 
 import {
   createBrowserRouter,
@@ -16,38 +12,48 @@ import {
 
 import './index.css'
 import AuthWrapper from './fb/auth.tsx'
+import Help from './screens/help.tsx';
+import NewNav from './components/nav.tsx';
+import ErrorElement from './screens/error.tsx';
 
 export const AppState = createContext(({
   fullState:    initialState as AppStateType,
   setState:     (_: AppStateType) => {}
 }))
 
-// // Your web app's Firebase configuration
-// // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// const firebaseConfig = {
-//   apiKey: "AIzaSyAW5Ffp-SKH7a8nEIMGHS7sdsrgIgY6rG8",
-//   authDomain: "dnd-characters-da783.firebaseapp.com",
-//   projectId: "dnd-characters-da783",
-//   storageBucket: "dnd-characters-da783.appspot.com",
-//   messagingSenderId: "962589107532",
-//   appId: "1:962589107532:web:7d7970f4a7c60cbfe3dbe9",
-//   measurementId: "G-HMQNKWXWSQ"
-// };
+// const router = createBrowserRouter(
+//   createRoutesFromElements(
+//     <Route path="/" element={
+//       <AuthWrapper>
+//         <App />
+//       </AuthWrapper>
+//       }
+//     >
+//     <Route path="help" element={
+//       <AuthWrapper>
+//         {/* <Help /> */}
+//       </AuthWrapper>
+//       }
+//     />
+//     </Route>
+//   )
+// );
 
-// // Initialize Firebase
-// export const app = initializeApp(firebaseConfig);
-// // const analytics = getAnalytics(app);
-
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={
-      <AuthWrapper>
-        <App />
-      </AuthWrapper>
+const router = createBrowserRouter([
+  {
+    errorElement: <ErrorElement />,
+    children: [
+      {
+        path: '/',
+        element: <AuthWrapper><App /></AuthWrapper>
+      },
+      {
+        path: '/help',
+        element: <AuthWrapper><Help /></AuthWrapper>
       }
-    />
-  )
-);
+    ]
+  } 
+])
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

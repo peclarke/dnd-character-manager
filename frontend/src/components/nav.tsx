@@ -1,7 +1,9 @@
-import { Toolbar, Box, IconButton, MenuItem, FormControl, Select, Button } from "@mui/material";
+import { Toolbar, Box, IconButton, MenuItem, FormControl, Select, Button, Link } from "@mui/material";
 import AppBar from "@mui/material/AppBar"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { logout } from "../fb/firebase";
+
+import "./nav.css";
 
 const Nav = () => {
     const [campaign, setCampaign] = useState(1);
@@ -65,4 +67,62 @@ const Nav = () => {
     )    
 }
 
-export default Nav;
+const event = new Event("newSessionNumber");
+
+const NewNav = () => {
+    const [active,   setActive]   = useState(1);
+    const [sessions, setSessions] = useState(6);
+
+    const getMeOut = () => {
+        logout();
+        window.location.reload();
+    }
+
+    const setNewActive = (session: number) => {
+        localStorage.setItem('activeSession', session.toString())
+        setActive(session)
+        // black magic sorcery
+        document.dispatchEvent(event);
+    }
+
+    useEffect(() => {
+        const activeNum = localStorage.getItem('activeSession');
+        if (activeNum) {
+            setActive(parseInt(activeNum))
+        }
+    }, [])
+
+    return (
+        <Box className="nav">
+            <div>
+                <h3><a href="/">Character Manager</a></h3>
+                <Link href="/">Dashboard</Link>
+                <Link href="/help">Help</Link>
+                <div className="sessions">
+                    {
+                        [...Array(sessions)].map((_, num) => <NumberCard key={"el-"+num} number={num + 1} active={(num + 1) === active} onClick={() => setNewActive(num + 1)}/>)
+                    }
+                </div>
+            </div>
+            <div>
+                <Button color="warning" variant="contained" onClick={getMeOut}>Log Out</Button>
+            </div>
+        </Box>
+    )
+}
+
+export type NumberCardType = {
+    number: number;
+    onClick: () => void;
+    active?: boolean;
+}
+
+export const NumberCard = (props: NumberCardType) => {
+    return (
+        <div className={props.active ? "numberCard active" : "numberCard"} onClick={props.onClick}>
+            {props.number}
+        </div>
+    )
+}
+
+export default NewNav;

@@ -3,21 +3,19 @@ import Card, { AddCard } from './card';
 import './group.css'
 import { useContext, useEffect, useState } from 'react';
 import { AppState } from '../../main';
-import { basicCharacter } from '../character/utils';
+import { basicCharacter, getSession } from '../character/utils';
 import { v4 as uuidv4 } from 'uuid';
 
 const CharacterGroup = () => {
     const {fullState, setState} = useContext(AppState);
     const [order, setOrder] = useState<Character[]>([]);
 
-    useEffect(() => {
-        const characters = getOrderedCharacterList();
-        setOrder(characters);
-    }, [fullState.characters])
+    useEffect(() => updateList(), [fullState.characters])
 
     const deleteCard = (uid: string) => {
         const newCharacters = fullState.characters.filter(character => character.uid !== uid);
         setState({
+            ...fullState,
             characters: [...newCharacters],
             selectedCharacter: 0
         })
@@ -45,7 +43,8 @@ const CharacterGroup = () => {
     const addNewCharacter = () => {
         const newCard = {
             ...basicCharacter,
-            uid: uuidv4()
+            uid: uuidv4(),
+            session: getSession(),
         }
 
         setState({
@@ -62,11 +61,20 @@ const CharacterGroup = () => {
         })
     }
 
+    const updateList = () => {
+        const characters = getOrderedCharacterList();
+        setOrder(characters);
+    }
+
     const getOrderedCharacterList = () => {
+        const session = getSession();
         const pinned = fullState.characters.filter(c => c.pinned);
-        const notPinned = fullState.characters.filter(c => !c.pinned);
+        const notPinned = fullState.characters.filter(c => !c.pinned && c.session === session);
         return pinned.concat(notPinned);
     }
+
+    // event listener for new session change
+    document.addEventListener('newSessionNumber', updateList)
 
     return (
         <Grid container className="charGroup"

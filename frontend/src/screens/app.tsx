@@ -4,7 +4,6 @@ import CharacterData from "../components/character/character";
 import { useMemo, useState } from "react";
 import { initialState } from "../types/state";
 import { AppState } from "../main";
-import Nav from "../components/nav";
 
 
 const App = () => {
@@ -16,7 +15,6 @@ const App = () => {
     return (
         <>
         <AppState.Provider value={stateValue}>
-        <Nav />
         <div style={{flexGrow: 1}}>
             <Grid container>
                 <Grid item xs={4} lg={2} sx={{backgroundColor: 'red'}}>

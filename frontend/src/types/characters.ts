@@ -10,4 +10,5 @@ type Character = {
     desc: string;
     pinned: boolean;
     uid: string;
+    session: number;
 }

@@ -7,5 +7,12 @@ export const basicCharacter: Character = {
     notes: "",
     desc: "Description",
     pinned: false,
-    uid: ""
+    uid: "",
+    session: 1
+}
+
+export const getSession = () => {
+    const session = localStorage.getItem("activeSession");
+    if (session) return parseInt(session);
+    return 1;
 }

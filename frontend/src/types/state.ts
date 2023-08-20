@@ -16,7 +16,8 @@ export const initialState: AppStateType = { // this should be replaced with what
             notes: "My character!!",
             desc: "Just a cheeky ol rabbit",
             pinned: true,
-            uid: "1111"
+            uid: "1111",
+            session: 1
         },
         {
             name:"Jean Pierre",
@@ -27,7 +28,8 @@ export const initialState: AppStateType = { // this should be replaced with what
             notes: "",
             desc: "he's french damnit",
             pinned: false,
-            uid: "0000"
+            uid: "0000",
+            session: 1
         }
     ],
     selectedCharacter: 0
