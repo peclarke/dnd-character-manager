@@ -11,10 +11,12 @@ on:
 defaults:
   run: 
     shell: bash
+    working-directory: frontend
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: peclarke/dnd-character-manager
+  WORKING_DIRECTORY: frontend
   NODE_VER: 18
 
 jobs:
