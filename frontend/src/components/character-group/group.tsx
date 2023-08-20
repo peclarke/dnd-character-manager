@@ -1,29 +1,29 @@
 import Grid from '@mui/material/Grid';
 import Card, { AddCard } from './card';
 import './group.css'
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppState } from '../../main';
 import { basicCharacter } from '../character/utils';
 import { v4 as uuidv4 } from 'uuid';
 
 const CharacterGroup = () => {
     const {fullState, setState} = useContext(AppState);
+    const [order, setOrder] = useState<Character[]>([]);
+
+    useEffect(() => {
+        const characters = getOrderedCharacterList();
+        setOrder(characters);
+    }, [fullState.characters])
 
     const deleteCard = (uid: string) => {
-        console.log(uid)
         const newCharacters = fullState.characters.filter(character => character.uid !== uid);
-
-        console.log(newCharacters)
         setState({
             characters: [...newCharacters],
             selectedCharacter: 0
         })
-        console.log(fullState.characters)
     }
 
     const pinCard = (uid: string) => {
-        console.log(uid)
-
         const newCharacters = fullState.characters.map(character => {
             if (character.uid === uid) {
                 return {
@@ -62,6 +62,12 @@ const CharacterGroup = () => {
         })
     }
 
+    const getOrderedCharacterList = () => {
+        const pinned = fullState.characters.filter(c => c.pinned);
+        const notPinned = fullState.characters.filter(c => !c.pinned);
+        return pinned.concat(notPinned);
+    }
+
     return (
         <Grid container className="charGroup"
             sx={{
@@ -71,7 +77,7 @@ const CharacterGroup = () => {
             spacing={0}
         >
             {
-                fullState.characters.map((ch, i) => {
+                order.map((ch, i) => {
                     return (
                         <Grid item key={"character-"+i}>
                             <Card
