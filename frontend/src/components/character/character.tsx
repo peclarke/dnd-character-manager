@@ -64,6 +64,9 @@ const EssentialInfo = (props: Character) => {
                     <Avatar alt={props.name} src={props.avatar} onClick={openAvatarModal}
                         sx={{
                             width: "80%",
+                            // minWidth: "100%",
+                            maxWidth: "15vw",
+                            maxHeight: "15vh",
                             height: "100%",
                             cursor: "pointer"
                         }}>

@@ -57,7 +57,7 @@ const Nav = () => {
                     <MenuItem value={3}>Session Three</MenuItem>
                 </Select>
                 <Button color="primary" variant="contained">Get Notes</Button>
-                <Button color="warning" variant="outlined" onClick={logout}>Sign Out</Button>
+                <Button color="warning" variant="contained" onClick={() => {logout(); window.location.reload();}}>Sign Out</Button>
             </FormControl>
           </Toolbar>
         </AppBar>

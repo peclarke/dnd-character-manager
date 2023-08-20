@@ -19,10 +19,10 @@ const App = () => {
         <Nav />
         <div style={{flexGrow: 1}}>
             <Grid container>
-                <Grid item xs={4} sx={{backgroundColor: 'red'}}>
+                <Grid item xs={4} lg={2} sx={{backgroundColor: 'red'}}>
                     <CharacterGroup />
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={8} lg={10}>
                     <CharacterData />
                 </Grid>
             </Grid>

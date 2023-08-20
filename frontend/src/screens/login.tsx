@@ -10,6 +10,12 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [error,   setError]   = useState(false);
 
+    const handleOnPress = (e: any) => {
+        if (e.key === "Enter") {
+            login();
+        }
+    }
+
     const login = () => {
         if (user === "" && pass === "") return;
         setError(false);
@@ -36,7 +42,7 @@ const Login = () => {
 
     return (
         <section>
-            <form>
+            <form onKeyDown={handleOnPress}>
                 <div className="formInfo">
                     <span>DND Character Manager</span>
                     <span>by Paul Clarke</span>
