@@ -54,16 +54,15 @@ const CharacterGroup = () => {
         })
     }
 
-    const selectCharacter = (pos: number) => {
-        for (const character of fullState.characters) {
-            
-        }
+    const selectCharacter = (uuid: string) => {
+        const found = fullState.characters.filter(ch => ch.uid === uuid);
+        const index = fullState.characters.indexOf(found[0]);
 
         // we need to select by UUID not by position TODO!!!!
 
         setState({
             ...fullState,
-            selectedCharacter: pos
+            selectedCharacter: index
         })
     }
 
@@ -97,7 +96,7 @@ const CharacterGroup = () => {
                             <Card
                                 deleteCard={deleteCard}
                                 pinCard={pinCard}
-                                select={() => selectCharacter(i)}
+                                select={() => selectCharacter(ch.uid)}
                                 {...ch}
                             />
                         </Grid>
