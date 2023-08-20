@@ -1,4 +1,4 @@
-import { Toolbar, Box, IconButton, MenuItem, FormControl, Select, Button, InputLabel } from "@mui/material";
+import { Toolbar, Box, IconButton, MenuItem, FormControl, Select, Button } from "@mui/material";
 import AppBar from "@mui/material/AppBar"
 import { useState } from "react";
 
@@ -55,7 +55,7 @@ const Nav = () => {
                     <MenuItem value={2}>Session Two</MenuItem>
                     <MenuItem value={3}>Session Three</MenuItem>
                 </Select>
-                <Button color="primary" variant="contained">Set Details</Button>
+                <Button color="primary" variant="contained">Get Notes</Button>
             </FormControl>
           </Toolbar>
         </AppBar>

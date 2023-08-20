@@ -4,3 +4,35 @@
     width: 95%;
     /* height: 120%; */
 }
+
+.cardActions {
+    /* style={{display: "flex", justifyContent: "space-between", width: "100%"}}  */
+    display: "flex";
+    justify-content: "space-between";
+    width: 100%;
+}
+
+.pinned-card {
+    background-color: "red";
+    padding: 20px;
+    cursor: pointer;
+    border-bottom: 1px solid silver;
+} 
+
+.characterActions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pin-btn-set {
+    color: rgb(223, 189, 0);
+}
+
+.pin-btn:hover {
+    color: rgb(223, 189, 0);
+}
+
+.delete-btn:hover {
+    color: rgb(208, 0, 0);
+}

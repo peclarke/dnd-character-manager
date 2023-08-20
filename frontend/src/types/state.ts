@@ -14,7 +14,9 @@ export const initialState: AppStateType = { // this should be replaced with what
             level:"5",
             race: "Harengon",
             notes: "My character!!",
-            desc: "Just a cheeky ol rabbit"
+            desc: "Just a cheeky ol rabbit",
+            pinned: true,
+            uid: "1111"
         },
         {
             name:"Jean Pierre",
@@ -23,7 +25,9 @@ export const initialState: AppStateType = { // this should be replaced with what
             level:"5",
             race: "Human",
             notes: "",
-            desc: "he's french damnit"
+            desc: "he's french damnit",
+            pinned: false,
+            uid: "0000"
         }
     ],
     selectedCharacter: 0

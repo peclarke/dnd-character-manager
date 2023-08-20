@@ -11,7 +11,7 @@ const EssentialInfo = (props: Character) => {
     const [avatarUrl, setAvatarUrl] = useState("");
     const openAvatarModal = () => setModalOpen(true);
     const closeAvatarModal = () => {setModalOpen(false); setAvatarUrl("")};
-
+    
     const updateCharacter = (value: string, field: string) => {
         const newCharacters = fullState.characters.map((character, i) => {
             if (fullState.selectedCharacter === i) {

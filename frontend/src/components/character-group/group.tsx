@@ -4,14 +4,53 @@ import './group.css'
 import { useContext } from 'react';
 import { AppState } from '../../main';
 import { basicCharacter } from '../character/utils';
+import { v4 as uuidv4 } from 'uuid';
 
 const CharacterGroup = () => {
     const {fullState, setState} = useContext(AppState);
 
-    const addNewCharacter = () => {
+    const deleteCard = (uid: string) => {
+        console.log(uid)
+        const newCharacters = fullState.characters.filter(character => character.uid !== uid);
+
+        console.log(newCharacters)
+        setState({
+            characters: [...newCharacters],
+            selectedCharacter: 0
+        })
+        console.log(fullState.characters)
+    }
+
+    const pinCard = (uid: string) => {
+        console.log(uid)
+
+        const newCharacters = fullState.characters.map(character => {
+            if (character.uid === uid) {
+                return {
+                    ...character,
+                    pinned: !character.pinned
+                }
+            } else {
+                return character
+            }
+        })
+
+
         setState({
             ...fullState,
-            characters: [...fullState.characters, basicCharacter],
+            characters: newCharacters,
+        })
+    }
+
+    const addNewCharacter = () => {
+        const newCard = {
+            ...basicCharacter,
+            uid: uuidv4()
+        }
+
+        setState({
+            ...fullState,
+            characters: [...fullState.characters, newCard],
             selectedCharacter: fullState.characters.length
         })
     }
@@ -21,7 +60,6 @@ const CharacterGroup = () => {
             ...fullState,
             selectedCharacter: pos
         })
-        console.log(pos)
     }
 
     return (
@@ -35,8 +73,11 @@ const CharacterGroup = () => {
             {
                 fullState.characters.map((ch, i) => {
                     return (
-                        <Grid item key={"character-"+i} onClick={() => selectCharacter(i)}>
+                        <Grid item key={"character-"+i}>
                             <Card
+                                deleteCard={deleteCard}
+                                pinCard={pinCard}
+                                select={() => selectCharacter(i)}
                                 {...ch}
                             />
                         </Grid>

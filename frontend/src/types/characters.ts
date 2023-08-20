@@ -8,4 +8,6 @@ type Character = {
     // app specific
     notes: string;
     desc: string;
+    pinned: boolean;
+    uid: string;
 }
