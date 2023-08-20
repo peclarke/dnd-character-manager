@@ -78,6 +78,11 @@ const NewNav = () => {
         setNewActive(sessions + 1);
     }
 
+    const validateSession = (session: number) => {
+        if (session <= sessions) return session;
+        return 1;
+    }
+
     const getMeOut = () => {
         logout();
         window.location.reload();
@@ -93,7 +98,8 @@ const NewNav = () => {
     useEffect(() => {
         const activeNum = localStorage.getItem('activeSession');
         if (activeNum) {
-            setActive(parseInt(activeNum))
+            const validated = validateSession(parseInt(activeNum))
+            setActive(validated)
         }
     }, [])
 
