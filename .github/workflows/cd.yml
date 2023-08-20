@@ -15,18 +15,32 @@ defaults:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: peclarke/dnd-character-manager
+  NODE_VER: 18
 
 jobs:
   build:
-    name: Build, Test, Deploy
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Make sure the project is building
-        run: npm run build
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VER }}
+
+      - run: npm ci
+      - run: npm run build
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Log into registry ${{ env.REGISTRY }}
         uses: docker/login-action@v2
