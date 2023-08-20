@@ -5,15 +5,12 @@ import { AppStateType, initialState } from './types/state.ts'
 
 import {
   createBrowserRouter,
-  createRoutesFromElements,
-  Route,
   RouterProvider,
 } from "react-router-dom";
 
 import './index.css'
 import AuthWrapper from './fb/auth.tsx'
 import Help from './screens/help.tsx';
-import NewNav from './components/nav.tsx';
 import ErrorElement from './screens/error.tsx';
 
 export const AppState = createContext(({
@@ -59,6 +56,5 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <RouterProvider router={router} />
-      {/* <Login /> */}
     </React.StrictMode>
 )

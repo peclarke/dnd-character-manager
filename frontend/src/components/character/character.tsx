@@ -65,7 +65,7 @@ const EssentialInfo = (props: Character) => {
                         sx={{
                             width: "80%",
                             // minWidth: "100%",
-                            maxWidth: "15vw",
+                            // maxWidth: "15vw",
                             maxHeight: "15vh",
                             height: "100%",
                             cursor: "pointer"
