@@ -1,6 +1,7 @@
 import { Box, Button, Link } from "@mui/material";
 import { useEffect, useState } from "react";
 import { logout } from "../fb/firebase";
+import AddIcon from '@mui/icons-material/Add';
 
 import "./nav.css";
 
@@ -70,7 +71,12 @@ const event = new Event("newSessionNumber");
 
 const NewNav = () => {
     const [active,   setActive]   = useState(1);
-    const [sessions, _setSessions] = useState(6);
+    const [sessions, setSessions] = useState(6);
+
+    const addSession = () => {
+        setSessions(sessions + 1);
+        setNewActive(sessions + 1);
+    }
 
     const getMeOut = () => {
         logout();
@@ -101,6 +107,7 @@ const NewNav = () => {
                     {
                         [...Array(sessions)].map((_, num) => <NumberCard key={"el-"+num} number={num + 1} active={(num + 1) === active} onClick={() => setNewActive(num + 1)}/>)
                     }
+                    <AddSessionCard onClick={addSession}/>
                 </div>
             </div>
             <div>
@@ -116,10 +123,22 @@ export type NumberCardType = {
     active?: boolean;
 }
 
+export type AddSessionCardType = {
+    onClick: () => void;
+}
+
 export const NumberCard = (props: NumberCardType) => {
     return (
         <div className={props.active ? "numberCard active" : "numberCard"} onClick={props.onClick}>
             {props.number}
+        </div>
+    )
+}
+
+export const AddSessionCard = (props: AddSessionCardType) => {
+    return (
+        <div className="numberCard addSessionCard" onClick={props.onClick}>
+            <AddIcon sx={{fontSize: "15px"}}/>
         </div>
     )
 }

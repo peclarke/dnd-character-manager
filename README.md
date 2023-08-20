@@ -12,5 +12,4 @@ Goals:
 - multiple campaign selection
 - customisable interface
 - search for characters
-- session editing (adding / removing sessions)
 - encapsulate a bunch of things under a setting hamburger thing

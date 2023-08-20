@@ -44,3 +44,16 @@ a:visited {
     display: flex;
     gap: 0.5em;
 }
+
+.addSessionCard {
+    opacity: 0.2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.addSessionCard:hover {
+    opacity: 1;
+    transition: 0.2s;
+}

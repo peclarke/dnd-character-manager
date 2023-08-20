@@ -55,6 +55,12 @@ const CharacterGroup = () => {
     }
 
     const selectCharacter = (pos: number) => {
+        for (const character of fullState.characters) {
+            
+        }
+
+        // we need to select by UUID not by position TODO!!!!
+
         setState({
             ...fullState,
             selectedCharacter: pos

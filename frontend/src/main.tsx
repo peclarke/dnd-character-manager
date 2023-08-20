@@ -18,24 +18,6 @@ export const AppState = createContext(({
   setState:     (_: AppStateType) => {}
 }))
 
-// const router = createBrowserRouter(
-//   createRoutesFromElements(
-//     <Route path="/" element={
-//       <AuthWrapper>
-//         <App />
-//       </AuthWrapper>
-//       }
-//     >
-//     <Route path="help" element={
-//       <AuthWrapper>
-//         {/* <Help /> */}
-//       </AuthWrapper>
-//       }
-//     />
-//     </Route>
-//   )
-// );
-
 const router = createBrowserRouter([
   {
     errorElement: <ErrorElement />,
