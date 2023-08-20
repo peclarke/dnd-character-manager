@@ -168,7 +168,7 @@ const Notes = (props: Character) => {
 }
 
 const CharacterData = () => {
-    const {fullState, setState} = useContext(AppState)
+    const { fullState } = useContext(AppState)
     const characterData = fullState.characters[fullState.selectedCharacter];
 
     return (
