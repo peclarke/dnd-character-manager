@@ -1,6 +1,7 @@
 import { Toolbar, Box, IconButton, MenuItem, FormControl, Select, Button } from "@mui/material";
 import AppBar from "@mui/material/AppBar"
 import { useState } from "react";
+import { logout } from "../fb/firebase";
 
 const Nav = () => {
     const [campaign, setCampaign] = useState(1);
@@ -56,6 +57,7 @@ const Nav = () => {
                     <MenuItem value={3}>Session Three</MenuItem>
                 </Select>
                 <Button color="primary" variant="contained">Get Notes</Button>
+                <Button color="warning" variant="outlined" onClick={logout}>Sign Out</Button>
             </FormControl>
           </Toolbar>
         </AppBar>
