@@ -1,7 +1,8 @@
 .nav {
     height: 5vh;
     position: static;
-    border-bottom: 5px solid gray;
+    border-bottom: 5px solid var(--accent);
+    background-color: var(--background);
     padding-left: 2em;
     padding-right: 2em;
 
@@ -35,8 +36,20 @@ a:visited {
     text-align: center;
 }
 
+.numberCard:hover {
+    background-color: var(--secondary);
+    border: 2px solid var(--secondary);
+}
+
 .active {
-    background-color: black;
+    border: 2px solid var(--primary);
+    background-color: var(--primary);
+    color: white;
+}
+
+.active:hover {
+    border: 2px solid var(--primary);
+    background-color: var(--primary);
     color: white;
 }
 
@@ -55,5 +68,5 @@ a:visited {
 
 .addSessionCard:hover {
     opacity: 1;
-    transition: 0.2s;
+    /* transition: 0.1s; */
 }

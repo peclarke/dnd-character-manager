@@ -47,9 +47,9 @@ const Login = () => {
                     <span>DND Character Manager</span>
                     <span>by Paul Clarke</span>
                 </div>
-                <TextField disabled={loading} value={user} placeholder={"Username"} onChange={(e) => setUser(e.target.value)} fullWidth={true} required={true}/>
+                <TextField disabled={loading} value={user} placeholder={"Username"} onChange={(e) => setUser(e.target.value)} fullWidth={true} required={true} color={"primary"}/>
                 <TextField disabled={loading} value={pass} placeholder={"Password"} onChange={(e) => setPass(e.target.value)} type={"password"} fullWidth={true} required={true}/>
-                <Button variant="contained" disabled={loading} onClick={login} fullWidth={true}>
+                <Button variant="contained" disabled={loading} onClick={login} fullWidth={true} id="login-btn">
                     {
                         loading ? <CircularProgress color="inherit" size={25}/> : "Login"
                     }

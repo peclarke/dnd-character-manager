@@ -5,3 +5,19 @@ body {
   min-height: 100vh;
   /* background-color: green; */
 }
+
+:root {
+  --text: #03191b;
+  --background: #ffffff;
+  --primary: #d72c19;
+  --secondary: #f6ddb6;
+  --accent: #c9185e;
+}
+
+/* [data-theme="dark"] {
+  --text: #fefaff;
+  --background: #23022c;
+  --primary: #8c15ac;
+  --secondary: #040005;
+  --accent: #dc70fa;
+} */

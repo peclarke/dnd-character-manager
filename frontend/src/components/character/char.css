@@ -1,6 +1,11 @@
+body {
+    background-color: var(--background);
+}
+
 .characterData {
-    background-color: blue;
-    height: 100%;
+    background-color: var(--background);
+    /* border-left: 3vw solid var(--secondary); */
+    height: 100vh;
     width: 100%;
     padding-top: 3vh;
     display: flex;
@@ -23,13 +28,17 @@
 
 .character-card {
     background-color: white;
+    /* margin-left: 1em;
+    margin-right: 2em;
+    margin-right: auto; */
     padding: 20px;
     cursor: pointer;
-    border-bottom: 1px solid silver;
+    /* border-top: 3px solid var(--accent); */
 }
 
 .character-card:hover {
-    background-color: #f9f0fe;
+    background-color: var(--primary);
+    color: var(--background);
 }
 
 .levelback {
@@ -42,8 +51,30 @@
     line-height:35px;
 }
 
+.search {
+    /* margin-top: 1em;
+    margin-left: 1em;
+    margin-right: 1em; */
+    background-color: var(--background);
+    padding: 20px;
+    cursor: pointer;
+    border-bottom: 1px solid rgb(219, 219, 219); 
+}
+
+.add-search {
+    cursor: not-allowed;
+    margin-top: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+    background-color: gray;
+    padding: 20px;
+}
+
 .add-character {
-    background-color: rgb(251, 251, 251);
+    margin-top: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+    background-color: var(--primary);
     padding: 20px;
     cursor: pointer;
     border-bottom: 1px solid rgb(219, 219, 219);
@@ -51,16 +82,16 @@
 
 .add-character>svg {
     font-size: 30px;
-    color: silver;
+    color: white;
 }
 
 .add-character:hover>svg {
-    color: black;
+    color: var(--text);
 }
 
 .add-character:hover {
-    background-color: white;
-    border-bottom: 1px solid silver;
+    background-color: var(--primary);
+    /* border: 0.3em solid black; */
 }
 
 .essential-input {

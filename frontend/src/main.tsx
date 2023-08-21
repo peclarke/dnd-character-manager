@@ -12,6 +12,7 @@ import './index.css'
 import AuthWrapper from './fb/auth.tsx'
 import Help from './screens/help.tsx';
 import ErrorElement from './screens/error.tsx';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 export const AppState = createContext(({
   fullState:    initialState as AppStateType,
@@ -34,9 +35,23 @@ const router = createBrowserRouter([
   } 
 ])
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#d72c19",
+      dark: "#d72c19",
+      contrastText: "#fff"
+    },
+    secondary: {main: "#f6ddb6"},
+    background: {default: "#fff"}
+    // info: {main: "#fff", : "#fff"}
+  }
+})
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-      <RouterProvider router={router} />
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </React.StrictMode>
 )

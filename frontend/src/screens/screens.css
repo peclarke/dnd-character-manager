@@ -23,3 +23,17 @@ form>div>span:first-child {
     font-weight: bold;
     font-size: 150%;    
 }
+
+body {
+    background-color: var(--background);
+}
+
+#login-btn {
+    background-color: var(--primary);
+    color: var(--background);
+}
+
+.ch-data {
+    background-color: var(--background);
+    height: 100%;
+}

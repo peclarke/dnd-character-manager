@@ -7,12 +7,20 @@ import PushPinIcon from '@mui/icons-material/PushPin';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
 import './group.css'
+import { useState } from "react";
 
 type CardProps = {deleteCard: (uid: string) => void, pinCard: (uid: string) => void, select: () => void} & Character
 
 const Card = (props: CardProps) => {
+    const [mouseIn, setMouseIn] = useState(false);
+    const enter = () => setMouseIn(true);
+    const leave = () => setMouseIn(false);
+
+    const pinFilled    = <PushPinIcon className="pin-btn-set" onMouseEnter={!props.pinned ? enter : () => null} onMouseLeave={leave}  onClick={(_e) => {props.pinCard(props.uid); leave()}}/>
+    const pinNotFilled = <PushPinOutlinedIcon className="pin-btn" onMouseEnter={enter} onMouseLeave={leave}  onClick={(_e) => props.pinCard(props.uid)}/>
+
     return (
-        <Grid container spacing={0} className={props.pinned ? "pinned-card" : "character-card"} sx={props.pinned ? {backgroundColor: "#feffd6"} : {}}>
+        <Grid container spacing={0} className={props.pinned ? "pinned-card pin-card" : "character-card"}>
             <Grid item xs={2} sx={{display: 'flex', justifyContent: 'center'}} onClick={props.select}>
                 <Avatar alt={props.name} src={props.avatar}></Avatar>
             </Grid>
@@ -21,16 +29,17 @@ const Card = (props: CardProps) => {
                 <span className="charclass">{props.class}</span>
             </Grid>
             <Grid item xs={2} className="characterActions">
-                {props.pinned ? <PushPinIcon className="pin-btn-set" onClick={(_e) => props.pinCard(props.uid)}/> : <PushPinOutlinedIcon className="pin-btn" onClick={(_e) => props.pinCard(props.uid)}/>}
+                {props.pinned ? pinFilled
+                              : mouseIn ? pinFilled : pinNotFilled}
                 <CloseOutlinedIcon className="delete-btn" onClick={(_e) => props.deleteCard(props.uid)}/>
             </Grid>
         </Grid>
     )
 }
 
-export const AddCard = () => {
+export const AddCard = (props: {searching: boolean}) => {
     return (
-        <div className="add-character"
+        <div className={!props.searching ? "add-character" : "add-search"}
             style={{
                 minHeight: "1vh",
                 display: "flex",

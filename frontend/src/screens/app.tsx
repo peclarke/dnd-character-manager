@@ -15,16 +15,16 @@ const App = () => {
     return (
         <>
         <AppState.Provider value={stateValue}>
-        <div style={{flexGrow: 1}}>
-            <Grid container>
-                <Grid item xs={4} lg={2} sx={{backgroundColor: 'red'}}>
-                    <CharacterGroup />
+            <div style={{flexGrow: 1}}>
+                <Grid container>
+                    <Grid item xs={4} lg={2}>
+                        <CharacterGroup />
+                    </Grid>
+                    <Grid item xs={8} lg={10} className="ch-data">
+                        <CharacterData />
+                    </Grid>
                 </Grid>
-                <Grid item xs={8} lg={10}>
-                    <CharacterData />
-                </Grid>
-            </Grid>
-        </div>
+            </div>
         </AppState.Provider>
         </>
     )

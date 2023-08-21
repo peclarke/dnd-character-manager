@@ -117,7 +117,7 @@ const NewNav = () => {
                 </div>
             </div>
             <div>
-                <Button color="warning" variant="contained" onClick={getMeOut}>Log Out</Button>
+                <Button color="primary" variant="contained" onClick={getMeOut}>Log Out</Button>
             </div>
         </Box>
     )

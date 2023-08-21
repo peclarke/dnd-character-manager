@@ -1,7 +1,8 @@
 .charGroup {
-    background-color: whitesmoke;
+    background-color: var(--secondary);
     /* min-height: 100vh; */
     width: 95%;
+    height: 100vh;
     /* height: 120%; */
 }
 
@@ -13,10 +14,9 @@
 }
 
 .pinned-card {
-    background-color: "red";
     padding: 20px;
     cursor: pointer;
-    border-bottom: 1px solid silver;
+    /* border-bottom: 1px solid silver; */
 } 
 
 .characterActions {
@@ -25,13 +25,24 @@
     justify-content: space-between;
 }
 
-.pin-btn-set {
-    color: rgb(223, 189, 0);
+.pin-card {
+    /* background-color: var(--background);
+    color: var(--primary); */
+    background-color: rgb(255, 255, 195);
+}
+
+.pin-card:hover {
+    background-color: var(--primary);
+    color: var(--background);
+}
+
+/* .pin-btn-set {
+    color: var(--primary);
 }
 
 .pin-btn:hover {
-    color: rgb(223, 189, 0);
-}
+    color: var(--primary);
+} */
 
 .delete-btn:hover {
     color: rgb(208, 0, 0);
