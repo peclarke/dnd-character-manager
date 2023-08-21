@@ -3,6 +3,7 @@
     /* min-height: 100vh; */
     width: 95%;
     height: 100vh;
+    padding-left: 1vw;
     /* height: 120%; */
 }
 
@@ -18,12 +19,6 @@
     cursor: pointer;
     /* border-bottom: 1px solid silver; */
 } 
-
-.characterActions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
 
 .pin-card {
     /* background-color: var(--background);
@@ -46,4 +41,22 @@
 
 .delete-btn:hover {
     color: rgb(208, 0, 0);
+}
+
+@media (min-width: 800px) {
+    .card-avatar {
+        display: flex;
+        justify-content: center;
+    }
+    .characterActions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+@media (min-width: 0px) and (max-width: 800px) {
+    .card-avatar {
+        display: none;
+    }
 }

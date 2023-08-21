@@ -12,6 +12,7 @@ const CharacterGroup = () => {
     const [order, setOrder] = useState<Character[]>([]);
 
     const [searching, setSearching] = useState(false);
+    const [searchCharacters, setSearchCharacters] = useState<Character[]>([]);
 
     useEffect(() => updateList(), [fullState.characters])
 
@@ -60,8 +61,6 @@ const CharacterGroup = () => {
     }
 
     const selectCharacter = (uuid: string) => {
-        if (searching) return;
-
         const found = fullState.characters.filter(ch => ch.uid === uuid);
         const index = fullState.characters.indexOf(found[0]);
 
@@ -85,7 +84,11 @@ const CharacterGroup = () => {
 
     // event listener for new session change
     document.addEventListener('newSessionNumber', updateList)
-    document.addEventListener('startSearch', () => setSearching(true));
+    document.addEventListener('startSearch', ({detail}: any) => {
+        const { characters } = detail;
+        setSearchCharacters(characters);
+        setSearching(true)
+    });
     document.addEventListener('stopSearch',  () => setSearching(false));
 
     return (
@@ -107,12 +110,25 @@ const CharacterGroup = () => {
                                 deleteCard={deleteCard}
                                 pinCard={pinCard}
                                 select={() => selectCharacter(ch.uid)}
+                                search={false}
                                 {...ch}
                             />
                         </Grid>
                     )
                 })
-                : null
+                : searchCharacters.map((ch, i) => {
+                    return (
+                        <Grid item key={"character-"+i}>
+                            <Card
+                                deleteCard={deleteCard}
+                                pinCard={pinCard}
+                                select={() => selectCharacter(ch.uid)}
+                                search={true}
+                                {...ch}
+                            />
+                        </Grid>
+                    )
+                })
             }
             <Grid item onClick={addNewCharacter}>
                 <AddCard searching={searching}/>

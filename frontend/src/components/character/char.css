@@ -3,14 +3,18 @@ body {
 }
 
 .characterData {
-    background-color: var(--background);
-    /* border-left: 3vw solid var(--secondary); */
+    background-color: var(--secondary);
     height: 100vh;
     width: 100%;
-    padding-top: 3vh;
+    padding-top: 1vh;
     display: flex;
     flex-direction: column;
     gap: 1vh;
+}
+
+.char-card-content {
+    margin-left: 1vw;
+    margin-right: 1vw;
 }
 
 .charname {
@@ -52,9 +56,7 @@ body {
 }
 
 .search {
-    /* margin-top: 1em;
-    margin-left: 1em;
-    margin-right: 1em; */
+    margin-top: 1vh;
     background-color: var(--background);
     padding: 20px;
     cursor: pointer;
@@ -72,8 +74,8 @@ body {
 
 .add-character {
     margin-top: 1em;
-    margin-left: 1em;
-    margin-right: 1em;
+    /* margin-left: 1em; */
+    /* margin-right: 1em; */
     background-color: var(--primary);
     padding: 20px;
     cursor: pointer;

@@ -1,4 +1,4 @@
-import { Box, Button, Link } from "@mui/material";
+import { Box, Button, Link, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { logout } from "../fb/firebase";
 import AddIcon from '@mui/icons-material/Add';
@@ -143,9 +143,11 @@ export const NumberCard = (props: NumberCardType) => {
 
 export const AddSessionCard = (props: AddSessionCardType) => {
     return (
+        <Tooltip title="Add new session">
         <div className="numberCard addSessionCard" onClick={props.onClick}>
             <AddIcon sx={{fontSize: "15px"}}/>
         </div>
+        </Tooltip>
     )
 }
 

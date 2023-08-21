@@ -17,10 +17,10 @@ const App = () => {
         <AppState.Provider value={stateValue}>
             <div style={{flexGrow: 1}}>
                 <Grid container>
-                    <Grid item xs={4} lg={2}>
+                    <Grid item xs={4} sm={4} md={3} lg={3}>
                         <CharacterGroup />
                     </Grid>
-                    <Grid item xs={8} lg={10} className="ch-data">
+                    <Grid item xs={8} sm={8} md={9} lg={9} className="ch-data">
                         <CharacterData />
                     </Grid>
                 </Grid>

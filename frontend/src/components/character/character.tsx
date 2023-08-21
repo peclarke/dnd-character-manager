@@ -1,6 +1,6 @@
 import Card from "@mui/material/Card";
 import "./char.css"
-import { CardContent, Typography, Grid, Avatar, TextField, Modal, Box, Button } from "@mui/material";
+import { CardContent, Typography, Grid, Avatar, TextField, Modal, Box, Button, Tooltip } from "@mui/material";
 import { AppState } from "../../main";
 import { useContext, useState } from "react";
 
@@ -47,10 +47,7 @@ const EssentialInfo = (props: Character) => {
             </div>
         </Box>
     </Modal>
-    <Card variant="outlined" sx={{
-        marginLeft: "3vw",
-        marginRight: "3vw"
-    }}>
+    <Card variant="outlined" className="char-card-content">
         <CardContent>
             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                 Essential Info
@@ -61,16 +58,16 @@ const EssentialInfo = (props: Character) => {
                     justifyContent: "left",
                     alignItems: "center"
                 }}>
-                    <Avatar alt={props.name} src={props.avatar} onClick={openAvatarModal}
-                        sx={{
-                            width: "80%",
-                            // minWidth: "100%",
-                            // maxWidth: "15vw",
-                            maxHeight: "15vh",
-                            height: "100%",
-                            cursor: "pointer"
-                        }}>
-                    </Avatar>
+                    <Tooltip title="Change avatar photo">
+                        <Avatar alt={props.name} src={props.avatar} onClick={openAvatarModal}
+                            sx={{
+                                width: "80%",
+                                maxHeight: "15vh",
+                                height: "100%",
+                                cursor: "pointer"
+                            }}>
+                        </Avatar>
+                    </Tooltip>
                 </Grid>
                 <Grid item xs={9} sx={{
                     display: "flex",
@@ -144,10 +141,7 @@ const Notes = (props: Character) => {
     }
 
     return (
-        <Card variant="outlined" sx={{
-            marginLeft: "3vw",
-            marginRight: "3vw"
-        }}>
+        <Card variant="outlined" className="char-card-content">
             <CardContent>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                     Player Notes

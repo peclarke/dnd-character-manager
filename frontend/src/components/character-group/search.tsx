@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { AppState } from "../../main";
 
 const SearchBar = () => {
-    const {fullState, setState} = useContext(AppState);
+    const {fullState} = useContext(AppState);
     const [val, setVal] = useState<string>("");
 
     const filterByName = () => {
@@ -24,14 +24,11 @@ const SearchBar = () => {
 
     const [filters, _setFilters] = useState([filterByName, filterByNotes, filterByRace, filterByClass]);
 
-    const start = new Event("startSearch");
     const stop  = new Event("stopSearch");
 
     useEffect(() => {
         if (val === "") {
             document.dispatchEvent(stop);
-        } else {
-            document.dispatchEvent(start);
         }
     }, [val])
 
@@ -44,7 +41,9 @@ const SearchBar = () => {
         filters.forEach(f => filts.push(f));
 
         const res = filterAll([filterByName]);
-        console.log(res);
+
+        const start = new CustomEvent("startSearch", { detail: { characters: res } });
+        document.dispatchEvent(start);
 
     }
 
@@ -84,7 +83,7 @@ const SearchBar = () => {
         <div className="search">
             <TextField 
                 variant="standard" 
-                placeholder={"Search..."} 
+                placeholder={"Search All Sessions..."} 
                 fullWidth={true}
                 value={val}
                 onChange={(e) => onChange(e.target.value)}
