@@ -3,6 +3,9 @@
 export type AppStateType = {
     characters: Character[];
     selectedCharacter: number; // index
+    
+    // firebase things
+    actionQueue: Map<string, number>;
 }
 
 export const initialState: AppStateType = { // this should be replaced with what is in the database
@@ -68,7 +71,8 @@ export const initialState: AppStateType = { // this should be replaced with what
             session: 2
         }
     ],
-    selectedCharacter: 0
+    selectedCharacter: 0,
+    actionQueue: new Map()
 }
 
 // go do something

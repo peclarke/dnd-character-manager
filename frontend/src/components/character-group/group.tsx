@@ -6,6 +6,7 @@ import { AppState } from '../../main';
 import { basicCharacter, getSession } from '../character/utils';
 import { v4 as uuidv4 } from 'uuid';
 import SearchBar from './search';
+import { SaveWrapper } from '../../fb/utils';
 
 const CharacterGroup = () => {
     const {fullState, setState} = useContext(AppState);
@@ -58,6 +59,8 @@ const CharacterGroup = () => {
             characters: [...fullState.characters, newCard],
             selectedCharacter: fullState.characters.length
         })
+
+        SaveWrapper(addNewCharacter);
     }
 
     const selectCharacter = (uuid: string) => {
