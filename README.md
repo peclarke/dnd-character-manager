@@ -13,3 +13,4 @@ Goals:
 - customisable interface
 - search for characters
 - encapsulate a bunch of things under a setting hamburger thing
+    
