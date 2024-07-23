@@ -1,4 +1,6 @@
-export const basicCharacter: Character = {
+import { RootCharacter } from "../../types/characters";
+
+export const basicCharacter: RootCharacter = {
     name: "FName LName",
     class: "Class / Position / Job",
     level: "1",
@@ -7,7 +9,6 @@ export const basicCharacter: Character = {
     notes: "",
     desc: "Description",
     pinned: false,
-    uid: "",
     session: 1
 }
 

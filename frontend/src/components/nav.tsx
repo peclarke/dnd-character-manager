@@ -4,6 +4,7 @@ import { logout } from "../fb/firebase";
 import AddIcon from '@mui/icons-material/Add';
 
 import "./nav.css";
+import { DevTool } from "../fb/data";
 
 // const Nav = () => {
 //     const [campaign, setCampaign] = useState(1);
@@ -109,6 +110,7 @@ const NewNav = () => {
                 <h3><a href="/">Character Manager</a></h3>
                 <Link href="/">Dashboard</Link>
                 <Link href="/help">Help</Link>
+                <Button onClick={DevTool}>Dev Button</Button>
                 <div className="sessions">
                     {
                         [...Array(sessions)].map((_, num) => <NumberCard key={"el-"+num} number={num + 1} active={(num + 1) === active} onClick={() => setNewActive(num + 1)}/>)
