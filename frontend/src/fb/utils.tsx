@@ -67,7 +67,7 @@ export const validateHashTime = (hash: string, queue: Record<string, number>) =>
     const actionEpochTime  = queue[hash];
     const currentEpochTime = Math.floor(Date.now() / 1000);
 
-    console.log(Object.values(queue), currentEpochTime)
+    // console.log(Object.values(queue), currentEpochTime)
 
     // if (currentEpochTime >= actionEpochTime) {
     //     console.log("TRUE")
@@ -81,13 +81,4 @@ export const validateHashTime = (hash: string, queue: Record<string, number>) =>
 
 
     // delete queue[hash];
-}
-
-/**
- * Upload the current application state to firestore.
- * This is ONLY run if all the conditions are met. Specifically,
- * the action queue epoch time must be greater than or equal to the
- * time delay for that specific action.
- */
-const uploadState = () => {
 }

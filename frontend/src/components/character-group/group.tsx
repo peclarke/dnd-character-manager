@@ -3,65 +3,67 @@ import Card, { AddCard } from './card';
 import './group.css'
 import { useContext, useEffect, useState } from 'react';
 import { AppState } from '../../main';
-import { basicCharacter, getSession } from '../character/utils';
-import { v4 as uuidv4 } from 'uuid';
+import { getSession } from '../character/utils';
 import SearchBar from './search';
-import { SaveWrapper, validateHashTime } from '../../fb/utils';
+import { validateHashTime } from '../../fb/utils';
+import { getDatabase, ref, onValue, update } from "firebase/database";
+import { AppCharacter, RootCharacter } from '../../types/characters';
+import { addCharacter, getCharacter } from '../../fb/data';
 
 const CharacterGroup = () => {
     const {fullState, setState} = useContext(AppState);
-    const [order, setOrder] = useState<Character[]>([]);
+    const [order, setOrder] = useState<RootCharacter[]>([]);
 
     const [searching, setSearching] = useState(false);
-    const [searchCharacters, setSearchCharacters] = useState<Character[]>([]);
+    const [searchCharacters, setSearchCharacters] = useState<RootCharacter[]>([]);
 
-    useEffect(() => updateList(), [fullState.characters])
+    useEffect(() => { 
+        const db = getDatabase();
+        const charactersRef = ref(db, 'characters/');
+        onValue(charactersRef, (snapshot) => {
+            const data = snapshot.val();
+            const characters = Object.values(data) as AppCharacter[];
+            console.log(characters);
+            updateList(characters) 
+        });
+    }, [])
 
     const deleteCard = (uid: string) => {
-        const newCharacters = fullState.characters.filter(character => character.uid !== uid);
-        setState({
-            ...fullState,
-            characters: [...newCharacters],
-            selectedCharacter: 0
-        })
+        // const newCharacters = fullState.characters.filter(character => character.uid !== uid);
+        // setState({
+        //     ...fullState,
+        //     characters: [...newCharacters],
+        //     selectedCharacter: 0
+        // })
     }
 
     const pinCard = (uid: string) => {
-        const newCharacters = fullState.characters.map(character => {
-            if (character.uid === uid) {
-                return {
-                    ...character,
-                    pinned: !character.pinned
-                }
-            } else {
-                return character
+        // const newCharacters = fullState.characters.map(character => {
+        //     if (character.uid === uid) {
+        //         return {
+        //             ...character,
+        //             pinned: !character.pinned
+        //         }
+        //     } else {
+        //         return character
+        //     }
+        // })
+
+        const db = getDatabase();
+        const updates: Record<string, AppCharacter> = {};
+        getCharacter(parseInt(uid))
+        .then(char => {
+            if (char === undefined) return;
+            updates["characters/" + uid] = {
+                ...char,
+                pinned: !char["pinned"]
             }
-        })
-
-
-        setState({
-            ...fullState,
-            characters: newCharacters,
+            update(ref(db), updates)
         })
     }
 
     const addNewCharacter = () => {
-        if (searching) return;
-
-        const newCard = {
-            ...basicCharacter,
-            uid: uuidv4(),
-            session: getSession(),
-        }
-
-        SaveWrapper(addNewCharacter, {fullState, setState}).then(updatedQueue => {
-            setState({
-                ...fullState,
-                characters: [...fullState.characters, newCard],
-                selectedCharacter: fullState.characters.length,
-                actionQueue: updatedQueue
-            });
-        });
+        addCharacter();
     }
 
     useEffect(() => {
@@ -70,29 +72,26 @@ const CharacterGroup = () => {
     }, [fullState.actionQueue])
 
     const selectCharacter = (uuid: string) => {
-        const found = fullState.characters.filter(ch => ch.uid === uuid);
-        const index = fullState.characters.indexOf(found[0]);
-
         setState({
             ...fullState,
-            selectedCharacter: index
+            selectedCharacter: uuid
         })
     }
 
-    const updateList = () => {
-        const characters = getOrderedCharacterList();
+    const updateList = (chars: AppCharacter[]) => {
+        const characters = getOrderedCharacterList(chars);
         setOrder(characters);
     }
 
-    const getOrderedCharacterList = () => {
+    const getOrderedCharacterList = (chars: AppCharacter[]) => {
         const session = getSession();
-        const pinned = fullState.characters.filter(c => c.pinned);
-        const notPinned = fullState.characters.filter(c => !c.pinned && c.session === session);
+        const pinned = chars.filter(c => c.pinned);
+        const notPinned = chars.filter(c => !c.pinned && c.session === session);
         return pinned.concat(notPinned);
     }
 
     // event listener for new session change
-    document.addEventListener('newSessionNumber', updateList)
+    // document.addEventListener('newSessionNumber', updateList)
     document.addEventListener('startSearch', ({detail}: any) => {
         const { characters } = detail;
         setSearchCharacters(characters);

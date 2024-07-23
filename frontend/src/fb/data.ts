@@ -1,7 +1,7 @@
 import { child, get, getDatabase, push, ref, set } from "firebase/database"
 import { app } from "./firebase";
 import { UserMetadata } from "firebase/auth";
-import { RootCharacter } from "../types/characters";
+import { AppCharacter, RootCharacter } from "../types/characters";
 import { basicCharacter } from "../components/character/utils";
 
 type UserInfoProps = {
@@ -28,13 +28,26 @@ export const addCharacter = (ch: AddCharacterProps = basicCharacter) => {
     const db = getDatabase(app);
     getCharacterNumbers()
     .then(charId => {
-        set(ref(db, 'characters/' + charId), ch)
+        set(ref(db, 'characters/' + charId), {...ch, uid: charId })
     });
 };
+
+export const getCharacter = (uid: number): Promise<AppCharacter | undefined> => {
+    const dbRef = ref(getDatabase());
+    return get(child(dbRef, `characters/${uid}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        console.log(snapshot.val());
+        return snapshot.val();
+    }
+    }).catch((error) => {
+        console.error(error);
+    });
+}
 
 
 export const DevTool = () => {
     console.log("dev tool active")
+    addCharacter();
 }
 
 /**
@@ -47,7 +60,6 @@ const getCharacterNumbers = (): Promise<number> => {
     return get(child(dbRef, `characters/`))
         .then((snapshot) => {
         if (snapshot.exists()) {
-            console.log(snapshot.val());
             const data = snapshot.val();
             const number = Object.keys(data).length;
 

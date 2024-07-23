@@ -2,9 +2,11 @@ import Card from "@mui/material/Card";
 import "./char.css"
 import { CardContent, Typography, Grid, Avatar, TextField, Modal, Box, Button, Tooltip } from "@mui/material";
 import { AppState } from "../../main";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AppCharacter, RootCharacter } from "../../types/characters";
+import { getDatabase, onValue, ref } from "firebase/database";
 
-const EssentialInfo = (props: Character) => {
+const EssentialInfo = (props: AppCharacter) => {
     const {fullState, setState} = useContext(AppState)
 
     const [modalOpen, setModalOpen] = useState(false);
@@ -13,20 +15,20 @@ const EssentialInfo = (props: Character) => {
     const closeAvatarModal = () => {setModalOpen(false); setAvatarUrl("")};
     
     const updateCharacter = (value: string, field: string) => {
-        const newCharacters = fullState.characters.map((character, i) => {
-            if (fullState.selectedCharacter === i) {
-                return {
-                    ...character,
-                    [field]: value
-                }
-            } else {
-                return character
-            }
-        })
+        // const newCharacters = fullState.characters.map((character, i) => {
+        //     if (fullState.selectedCharacter === i) {
+        //         return {
+        //             ...character,
+        //             [field]: value
+        //         }
+        //     } else {
+        //         return character
+        //     }
+        // })
 
         setState({
             ...fullState,
-            characters: newCharacters
+            // characters: newCharacters
         })
     }
 
@@ -39,7 +41,7 @@ const EssentialInfo = (props: Character) => {
         <Box className="avatarModal">
             <h2 id="parent-modal-title">Change Avatar</h2>
             <p id="parent-modal-description">
-            Insert an image link below and hit submit to change the avatar for <strong>{fullState.characters[fullState.selectedCharacter].name}</strong>
+            Insert an image link below and hit submit to change the avatar for <strong>{props.name}</strong>
             </p>
             <div style={{display: "flex", flexDirection: "column", gap: "1vh"}}>
                 <TextField value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder={"URL for character avatar"}/>
@@ -119,24 +121,24 @@ const EssentialInfo = (props: Character) => {
     )
 }
 
-const Notes = (props: Character) => {
+const Notes = (props: AppCharacter) => {
     const {fullState, setState} = useContext(AppState)
 
     const updateNotes = (newNote: string) => {
-        const newCharacters = fullState.characters.map((character, i) => {
-            if (fullState.selectedCharacter === i) {
-                return {
-                    ...character,
-                    notes: newNote
-                }
-            } else {
-                return character
-            }
-        })
+        // const newCharacters = fullState.characters.map((character, i) => {
+        //     if (fullState.selectedCharacter === i) {
+        //         return {
+        //             ...character,
+        //             notes: newNote
+        //         }
+        //     } else {
+        //         return character
+        //     }
+        // })
 
         setState({
             ...fullState,
-            characters: newCharacters
+            // characters: newCharacters
         })
     }
 
@@ -162,13 +164,29 @@ const Notes = (props: Character) => {
 }
 
 const CharacterData = () => {
-    const { fullState } = useContext(AppState)
-    const characterData = fullState.characters[fullState.selectedCharacter];
+    const { fullState } = useContext(AppState);
+
+    const [characterData, setChar] = useState<RootCharacter | undefined>();
+
+    useEffect(() => { 
+        const db = getDatabase();
+        const singleCharRef = ref(db, 'characters/' + fullState.selectedCharacter);
+        onValue(singleCharRef, (snapshot) => {
+            const data = snapshot.val() as RootCharacter;
+            setChar(data);
+        });
+    }, [fullState.selectedCharacter])
 
     return (
         <div className="characterData">
-            <EssentialInfo {...characterData}/>
-            <Notes {...characterData}/>
+            {
+                characterData === undefined
+                    ? <p>No character selected</p>
+                    : <>
+                        <EssentialInfo {...characterData}/>
+                        <Notes {...characterData}/>
+                    </>
+            }
         </div>
     )
 }

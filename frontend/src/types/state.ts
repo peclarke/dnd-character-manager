@@ -1,14 +1,18 @@
-// import { createContext, useMemo, useState } from "react";
+import { AppCharacter } from "./characters";
 
 export type AppStateType = {
-    characters: Character[];
-    selectedCharacter: number; // index
+    uid: string;
+
+    characters: AppCharacter[];
+    selectedCharacter: string; // index
     
     // firebase things
     actionQueue: Record<string, number>;
 }
 
 export const initialState: AppStateType = { // this should be replaced with what is in the database
+    uid: "",
+
     characters: [
         {
             name:"Seth Beau",
@@ -71,7 +75,7 @@ export const initialState: AppStateType = { // this should be replaced with what
             session: 2
         }
     ],
-    selectedCharacter: 0,
+    selectedCharacter: "0",
     actionQueue: {}
 }
 
