@@ -1,16 +1,24 @@
-import { hash } from 'bcryptjs';
+// import { hash } from 'bcryptjs';
 
 // state management
-import { useContext } from 'react';
-import { AppState } from '../main';
+// import { useContext } from 'react';
+// import { AppState } from '../main';
+import { AppStateType } from '../types/state';
+
+
 
 // globals
-const TIME_DELAY = 30; // seconds
+const TIME_DELAY = 3; // seconds
+
+type ContextState = {
+    fullState: AppStateType;
+    setState:  (state: AppStateType) => void;
+}
 
 export const hashFunc = async (func: (_: any) => any) => {
     const functionFormat = func.toString();
-    // return createHash("sha256").update(functionFormat).digest("hex");
-    return await hash(functionFormat, 1)
+    // return await hash(functionFormat, 1)
+    return await functionFormat;
 }
 
 /**
@@ -33,23 +41,16 @@ export const hashFunc = async (func: (_: any) => any) => {
  * delay to be greater to equal.
  * @param func 
  */
-export const SaveWrapper = (func: (_: any) => any) => {
-    const { fullState, setState } = useContext(AppState);
-
-    hashFunc(func).then(hash => {
+export const SaveWrapper = async (func: (_: any) => any, { fullState }: ContextState): Promise<Record<string, number>> => {
+    return await hashFunc(func).then(hash => {
         const epochSeconds = Math.floor(Date.now() / 1000); // https://stackoverflow.com/questions/221294/how-do-i-get-a-timestamp-in-javascript
     
-        // save to app state
-        setState({
-            ...fullState,
-            actionQueue: {
-                ...fullState.actionQueue,
-                [hash]: epochSeconds
-            }
-        });
-    
-        // initiate callback
-        setTimeout(() => validateHashTime(hash), TIME_DELAY * 1000); // 30s * 1000 = 30,000ms
+        const updatedQueue = {
+            ...fullState.actionQueue,
+            [hash]: epochSeconds
+        }
+
+        return updatedQueue;
     });
 }
 
@@ -59,12 +60,27 @@ export const SaveWrapper = (func: (_: any) => any) => {
  * If it is, it will initiate an upload to firestore.
  * @param hash 
  */
-const validateHashTime = (hash: string) => {
-    const { fullState } = useContext(AppState);
-    const actionEpochTime = fullState.actionQueue.get(hash);
+export const validateHashTime = (hash: string, queue: Record<string, number>) => {
+    // problem: its using the queue that we give it, which is wrong.
+
+    // console.log(Object.values(queue))
+    const actionEpochTime  = queue[hash];
+    const currentEpochTime = Math.floor(Date.now() / 1000);
+
+    console.log(Object.values(queue), currentEpochTime)
+
+    // if (currentEpochTime >= actionEpochTime) {
+    //     console.log("TRUE")
+    // } else {
+    //     console.log("FALSE")
+    // }
 
 
+    // console.log(actionEpochTime)
     // uploadState() if conditions are ok
+
+
+    // delete queue[hash];
 }
 
 /**
@@ -74,5 +90,4 @@ const validateHashTime = (hash: string) => {
  * time delay for that specific action.
  */
 const uploadState = () => {
-
 }

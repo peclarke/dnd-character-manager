@@ -6,7 +6,7 @@ import { AppState } from '../../main';
 import { basicCharacter, getSession } from '../character/utils';
 import { v4 as uuidv4 } from 'uuid';
 import SearchBar from './search';
-import { SaveWrapper } from '../../fb/utils';
+import { SaveWrapper, validateHashTime } from '../../fb/utils';
 
 const CharacterGroup = () => {
     const {fullState, setState} = useContext(AppState);
@@ -54,14 +54,20 @@ const CharacterGroup = () => {
             session: getSession(),
         }
 
-        setState({
-            ...fullState,
-            characters: [...fullState.characters, newCard],
-            selectedCharacter: fullState.characters.length
-        })
-
-        SaveWrapper(addNewCharacter);
+        SaveWrapper(addNewCharacter, {fullState, setState}).then(updatedQueue => {
+            setState({
+                ...fullState,
+                characters: [...fullState.characters, newCard],
+                selectedCharacter: fullState.characters.length,
+                actionQueue: updatedQueue
+            });
+        });
     }
+
+    useEffect(() => {
+        // initiate callback
+        setTimeout(() => validateHashTime(addNewCharacter.toString(), fullState.actionQueue), 3 * 1000); // 30s * 1000 = 30,000ms
+    }, [fullState.actionQueue])
 
     const selectCharacter = (uuid: string) => {
         const found = fullState.characters.filter(ch => ch.uid === uuid);
