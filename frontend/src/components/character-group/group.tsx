@@ -1,57 +1,41 @@
 import Grid from '@mui/material/Grid';
 import Card, { AddCard } from './card';
 import './group.css'
-import { useContext, useEffect, useState } from 'react';
-import { AppState } from '../../main';
+import { useEffect, useState } from 'react';
 import { getSession } from '../character/utils';
 import SearchBar from './search';
-import { validateHashTime } from '../../fb/utils';
-import { getDatabase, ref, onValue, update } from "firebase/database";
-import { AppCharacter, RootCharacter } from '../../types/characters';
+// import { validateHashTime } from '../../fb/utils';
+import { getDatabase, ref, update, remove } from "firebase/database";
+import { RootCharacter } from '../../types/characters';
 import { addCharacter, getCharacter } from '../../fb/data';
+import { useStoreActions, useStoreState } from '../../store/hooks';
 
 const CharacterGroup = () => {
-    const {fullState, setState} = useContext(AppState);
+    const characters = useStoreState((state) => state.characters);
+
     const [order, setOrder] = useState<RootCharacter[]>([]);
+
+    useEffect(() => {
+        updateList(characters);
+    }, [characters])
 
     const [searching, setSearching] = useState(false);
     const [searchCharacters, setSearchCharacters] = useState<RootCharacter[]>([]);
 
-    useEffect(() => { 
-        const db = getDatabase();
-        const charactersRef = ref(db, 'characters/');
-        onValue(charactersRef, (snapshot) => {
-            const data = snapshot.val();
-            const characters = Object.values(data) as AppCharacter[];
-            console.log(characters);
-            updateList(characters) 
-        });
-    }, [])
+    const delCard = useStoreActions(actions => actions.delCharacter);
+    const selCard = useStoreActions(actions => actions.setSelectedIndex);
 
-    const deleteCard = (uid: string) => {
-        // const newCharacters = fullState.characters.filter(character => character.uid !== uid);
-        // setState({
-        //     ...fullState,
-        //     characters: [...newCharacters],
-        //     selectedCharacter: 0
-        // })
+    const deleteCard = (uid: number) => {
+        const db = getDatabase();
+        const charactersRef = ref(db, 'characters/' + uid);
+        remove(charactersRef);
+        delCard(uid);
     }
 
-    const pinCard = (uid: string) => {
-        // const newCharacters = fullState.characters.map(character => {
-        //     if (character.uid === uid) {
-        //         return {
-        //             ...character,
-        //             pinned: !character.pinned
-        //         }
-        //     } else {
-        //         return character
-        //     }
-        // })
-
+    const pinCard = (uid: number) => {
         const db = getDatabase();
-        const updates: Record<string, AppCharacter> = {};
-        getCharacter(parseInt(uid))
+        const updates: Record<string, RootCharacter> = {};
+        getCharacter(uid)
         .then(char => {
             if (char === undefined) return;
             updates["characters/" + uid] = {
@@ -66,24 +50,17 @@ const CharacterGroup = () => {
         addCharacter();
     }
 
-    useEffect(() => {
-        // initiate callback
-        setTimeout(() => validateHashTime(addNewCharacter.toString(), fullState.actionQueue), 3 * 1000); // 30s * 1000 = 30,000ms
-    }, [fullState.actionQueue])
+    // useEffect(() => {
+    //     // initiate callback
+    //     setTimeout(() => validateHashTime(addNewCharacter.toString(), fullState.actionQueue), 3 * 1000); // 30s * 1000 = 30,000ms
+    // }, [fullState.actionQueue])
 
-    const selectCharacter = (uuid: string) => {
-        setState({
-            ...fullState,
-            selectedCharacter: uuid
-        })
-    }
-
-    const updateList = (chars: AppCharacter[]) => {
+    const updateList = (chars: RootCharacter[]) => {
         const characters = getOrderedCharacterList(chars);
         setOrder(characters);
     }
 
-    const getOrderedCharacterList = (chars: AppCharacter[]) => {
+    const getOrderedCharacterList = (chars: RootCharacter[]) => {
         const session = getSession();
         const pinned = chars.filter(c => c.pinned);
         const notPinned = chars.filter(c => !c.pinned && c.session === session);
@@ -117,7 +94,7 @@ const CharacterGroup = () => {
                             <Card
                                 deleteCard={deleteCard}
                                 pinCard={pinCard}
-                                select={() => selectCharacter(ch.uid)}
+                                select={() => selCard(ch.uid)}
                                 search={false}
                                 {...ch}
                             />
@@ -130,7 +107,7 @@ const CharacterGroup = () => {
                             <Card
                                 deleteCard={deleteCard}
                                 pinCard={pinCard}
-                                select={() => selectCharacter(ch.uid)}
+                                select={() => selCard(ch.uid)}
                                 search={true}
                                 {...ch}
                             />

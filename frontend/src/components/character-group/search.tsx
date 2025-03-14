@@ -1,25 +1,27 @@
 import { TextField } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
-import { AppState } from "../../main";
+import { useEffect, useState } from "react";
+import { RootCharacter } from "../../types/characters";
+import { useStoreState } from "../../store/hooks";
 
 const SearchBar = () => {
-    const {fullState} = useContext(AppState);
+    const characters = useStoreState(state => state.characters);
+
     const [val, setVal] = useState<string>("");
 
     const filterByName = () => {
-        return fullState.characters.filter(ch => ch.name.toLowerCase().includes(val.toLowerCase()))
+        return characters.filter(ch => ch.name.toLowerCase().includes(val.toLowerCase()))
     }
 
     const filterByNotes = () => {
-        return fullState.characters.filter(ch => ch.notes.includes(val));
+        return characters.filter(ch => ch.notes.includes(val));
     }
 
     const filterByRace = () => {
-        return fullState.characters.filter(ch => ch.race.includes(val));
+        return characters.filter(ch => ch.race.includes(val));
     }
 
     const filterByClass = () => {
-        return fullState.characters.filter(ch => ch.class.includes(val));
+        return characters.filter(ch => ch.class.includes(val));
     }
 
     const [filters, _setFilters] = useState([filterByName, filterByNotes, filterByRace, filterByClass]);
@@ -35,9 +37,9 @@ const SearchBar = () => {
     const onChange = (newValue: string) => {
         setVal(newValue);
 
-        const allChs: Character[] = [];
-        const filts: (() => Character[])[] = [];
-        fullState.characters.forEach(ch => allChs.push(ch));
+        const allChs: RootCharacter[] = [];
+        const filts: (() => RootCharacter[])[] = [];
+        characters.forEach(ch => allChs.push(ch));
         filters.forEach(f => filts.push(f));
 
         const res = filterAll([filterByName]);
@@ -47,7 +49,7 @@ const SearchBar = () => {
 
     }
 
-    const filterAll = (filterList: (() => Character[])[]): Character[] => {
+    const filterAll = (filterList: (() => RootCharacter[])[]): RootCharacter[] => {
         const result = filterList[0]();
         filterList.shift();
 
@@ -68,7 +70,7 @@ const SearchBar = () => {
         // }
     }
 
-    const filterHelper = (filterList: (() => Character[])[], result: Character[]): Character[] => {
+    const filterHelper = (filterList: (() => RootCharacter[])[], result: RootCharacter[]): RootCharacter[] => {
         if (filterList.length === 0) return result;
         const filteredGroup = filterList[0]();
 

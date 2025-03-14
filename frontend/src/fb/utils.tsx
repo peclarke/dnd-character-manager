@@ -3,7 +3,7 @@
 // state management
 // import { useContext } from 'react';
 // import { AppState } from '../main';
-import { AppStateType } from '../types/state';
+import { AppStateType } from '../store/model';
 
 
 

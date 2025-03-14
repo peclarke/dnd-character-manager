@@ -9,7 +9,8 @@ export const basicCharacter: RootCharacter = {
     notes: "",
     desc: "Description",
     pinned: false,
-    session: 1
+    session: 1,
+    uid: -1,
 }
 
 export const getSession = () => {

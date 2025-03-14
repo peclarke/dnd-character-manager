@@ -1,7 +1,7 @@
-import { child, get, getDatabase, push, ref, set } from "firebase/database"
+import { child, get, getDatabase, onValue, push, ref, set, update } from "firebase/database"
 import { app } from "./firebase";
 import { UserMetadata } from "firebase/auth";
-import { AppCharacter, RootCharacter } from "../types/characters";
+import { RootCharacter } from "../types/characters";
 import { basicCharacter } from "../components/character/utils";
 
 type UserInfoProps = {
@@ -32,11 +32,29 @@ export const addCharacter = (ch: AddCharacterProps = basicCharacter) => {
     });
 };
 
-export const getCharacter = (uid: number): Promise<AppCharacter | undefined> => {
+export const setUpdateCharacter = (uid: number, newChar: RootCharacter) => {
+    const db = getDatabase(app);
+    set(ref(db, 'characters/' + uid), newChar);
+}
+
+export const updateCharacter = (uid: number, field: string, value: string) => {
+    const db = getDatabase();
+    getCharacter(uid)
+    .then(char => {
+        if (char === undefined) return;
+        const updates: Record<string, RootCharacter> = {}
+        updates["characters/" + char.uid] = {
+            ...char,
+            [field]: value
+        }
+        update(ref(db), updates)
+    })
+}
+
+export const getCharacter = (uid: number): Promise<RootCharacter | undefined> => {
     const dbRef = ref(getDatabase());
     return get(child(dbRef, `characters/${uid}`)).then((snapshot) => {
     if (snapshot.exists()) {
-        console.log(snapshot.val());
         return snapshot.val();
     }
     }).catch((error) => {

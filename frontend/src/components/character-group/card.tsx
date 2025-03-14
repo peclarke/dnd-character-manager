@@ -9,8 +9,9 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
 import './group.css'
 import { useState } from "react";
+import { RootCharacter } from "../../types/characters";
 
-type CardProps = {deleteCard: (uid: string) => void, pinCard: (uid: string) => void, select: () => void, search: boolean} & Character
+type CardProps = {deleteCard: (uid: number) => void, pinCard: (uid: number) => void, select: () => void, search: boolean} & RootCharacter
 
 const Card = (props: CardProps) => {
     const [mouseIn, setMouseIn] = useState(false);

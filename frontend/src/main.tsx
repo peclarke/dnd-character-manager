@@ -1,7 +1,6 @@
-import React, { createContext } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './screens/app.tsx'
-import { AppStateType, initialState } from './types/state.ts'
 
 import {
   createBrowserRouter,
@@ -14,10 +13,10 @@ import Help from './screens/help.tsx';
 import ErrorElement from './screens/error.tsx';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-export const AppState = createContext(({
-  fullState:    initialState as AppStateType,
-  setState:     (_: AppStateType) => {}
-}))
+// export const AppState = createContext(({
+//   fullState:    initialState as AppStateType,
+//   setState:     (_: AppStateType) => {}
+// }))
 
 const router = createBrowserRouter([
   {
@@ -31,7 +30,8 @@ const router = createBrowserRouter([
         path: '/help',
         element: <AuthWrapper><Help /></AuthWrapper>
       }
-    ]
+    ],
+    
   } 
 ])
 

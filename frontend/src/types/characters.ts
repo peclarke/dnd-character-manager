@@ -9,15 +9,10 @@ export type RootCharacter = {
     notes: string;
     pinned: boolean;
     // metadata
-    uid: string;
+    uid: number;
     session: number;
 }
 
-export type AppCharacter = RootCharacter & {
-    // app specific
-    // notes: string;
-    // desc: string;
-    pinned: boolean;
-    uid: string;
-    // session: number;
+export type CharacterView = {
+    data: RootCharacter;
 }
