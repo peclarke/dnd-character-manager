@@ -1,4 +1,6 @@
-export const basicCharacter: Character = {
+import { RootCharacter } from "../../types/characters";
+
+export const basicCharacter: RootCharacter = {
     name: "FName LName",
     class: "Class / Position / Job",
     level: "1",
@@ -7,12 +9,6 @@ export const basicCharacter: Character = {
     notes: "",
     desc: "Description",
     pinned: false,
-    uid: "",
-    session: 1
-}
-
-export const getSession = () => {
-    const session = localStorage.getItem("activeSession");
-    if (session) return parseInt(session);
-    return 1;
+    session: 1,
+    uid: -1,
 }

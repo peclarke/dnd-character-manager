@@ -9,8 +9,9 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
 import './group.css'
 import { useState } from "react";
+import { RootCharacter } from "../../types/characters";
 
-type CardProps = {deleteCard: (uid: string) => void, pinCard: (uid: string) => void, select: () => void, search: boolean} & Character
+type CardProps = {deleteCard: (uid: number) => void, pinCard: (uid: number) => void, select: () => void, search: boolean} & RootCharacter
 
 const Card = (props: CardProps) => {
     const [mouseIn, setMouseIn] = useState(false);
@@ -21,6 +22,10 @@ const Card = (props: CardProps) => {
     const pinNotFilled = <PushPinOutlinedIcon className="pin-btn" onMouseEnter={enter} onMouseLeave={leave}  onClick={(_e) => props.pinCard(props.uid)}/>
 
     const matches = useMediaQuery('(min-width: 0px) and (max-width: 800px)');
+
+    const confirmDelete = () => {
+        window.confirm(`Are you sure you want to delete ${props.name}?`) && props.deleteCard(props.uid);
+    }
 
     return (
         <Grid container spacing={0} className={props.pinned ? "pinned-card pin-card" : "character-card"}>
@@ -37,17 +42,18 @@ const Card = (props: CardProps) => {
                                 : mouseIn ? pinFilled : pinNotFilled}
                 </Tooltip>
                 <Tooltip title="Delete character">
-                    <CloseOutlinedIcon className="delete-btn" onClick={(_e) => props.deleteCard(props.uid)}/>
+                    <CloseOutlinedIcon className="delete-btn" onClick={confirmDelete}/>
                 </Tooltip>
             </Grid>
         </Grid>
     )
 }
 
-export const AddCard = (props: {searching: boolean}) => {
+export const AddCard = (props: {searching: boolean, cid: string}) => {
+    const errMsg = props.cid === "none" ? "No campaign has been selected" : "You cannot add a character whilst searching";
     return (
-        <Tooltip title={props.searching ? "You cannot add a character whilst searching" : "Add a new character"}>
-            <div className={!props.searching ? "add-character" : "add-search"}
+        <Tooltip title={props.searching || props.cid === "none" ? errMsg : "Add a new character"}>
+            <div className={!props.searching && props.cid !== "none" ? "add-character" : "add-search"}
                 style={{
                     minHeight: "1vh",
                     display: "flex",

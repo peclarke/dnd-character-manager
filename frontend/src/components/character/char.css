@@ -55,6 +55,16 @@ body {
     line-height:35px;
 }
 
+.session-info {
+    margin-top: 1vh;
+    background-color: var(--background);
+    padding: 20px;
+    cursor: pointer;
+    border-bottom: 1px solid rgb(219, 219, 219); 
+    display: flex;
+    justify-content: space-around
+}
+
 .search {
     margin-top: 1vh;
     background-color: var(--background);

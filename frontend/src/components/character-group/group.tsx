@@ -1,104 +1,93 @@
 import Grid from '@mui/material/Grid';
 import Card, { AddCard } from './card';
 import './group.css'
-import { useContext, useEffect, useState } from 'react';
-import { AppState } from '../../main';
-import { basicCharacter, getSession } from '../character/utils';
-import { v4 as uuidv4 } from 'uuid';
+import { useEffect, useState } from 'react';
 import SearchBar from './search';
-import { SaveWrapper, validateHashTime } from '../../fb/utils';
+import { getDatabase, ref, update, remove } from "firebase/database";
+import { RootCharacter } from '../../types/characters';
+import { addCharacter, getCharacter } from '../../fb/data';
+import { useStoreActions, useStoreState } from '../../store/hooks';
+import { Button, Typography } from '@mui/material';
 
 const CharacterGroup = () => {
-    const {fullState, setState} = useContext(AppState);
-    const [order, setOrder] = useState<Character[]>([]);
+    const characters = useStoreState((state) => state.characters);
+    const campaignId = useStoreState((state) => state.campaign.campaignId);
+    const activeSession = useStoreState((state) => state.campaign.activeSession);
+
+    const [order, setOrder] = useState<RootCharacter[]>([]);
+
+    useEffect(() => {
+        updateList(characters);
+    }, [characters, activeSession])
 
     const [searching, setSearching] = useState(false);
-    const [searchCharacters, setSearchCharacters] = useState<Character[]>([]);
+    const [searchCharacters, setSearchCharacters] = useState<RootCharacter[]>([]);
 
-    useEffect(() => updateList(), [fullState.characters])
+    const delCard = useStoreActions(actions => actions.delCharacter);
+    const selCard = useStoreActions(actions => actions.setSelectedIndex);
+    const setCurrentCharacter = useStoreActions(actions => actions.setSelected);
 
-    const deleteCard = (uid: string) => {
-        const newCharacters = fullState.characters.filter(character => character.uid !== uid);
-        setState({
-            ...fullState,
-            characters: [...newCharacters],
-            selectedCharacter: 0
-        })
+    const handleSelect = (uid: number) => {
+        selCard(uid);
     }
 
-    const pinCard = (uid: string) => {
-        const newCharacters = fullState.characters.map(character => {
-            if (character.uid === uid) {
-                return {
-                    ...character,
-                    pinned: !character.pinned
-                }
-            } else {
-                return character
+    const deleteCard = (uid: number) => {
+        const db = getDatabase();
+        const charactersRef = ref(db, `campaigns/${campaignId}/characters/${uid}`);
+        remove(charactersRef);
+        delCard(uid);
+    }
+
+    const pinCard = (uid: number) => {
+        const db = getDatabase();
+        const updates: Record<string, RootCharacter> = {};
+        getCharacter(uid, campaignId)
+        .then(char => {
+            if (char === undefined) return;
+            updates[`campaigns/${campaignId}/characters/${char.character.uid}`] = {
+                ...char.character,
+                pinned: !char.character["pinned"]
             }
-        })
-
-
-        setState({
-            ...fullState,
-            characters: newCharacters,
+            update(ref(db), updates)
         })
     }
 
     const addNewCharacter = () => {
-        if (searching) return;
-
-        const newCard = {
-            ...basicCharacter,
-            uid: uuidv4(),
-            session: getSession(),
-        }
-
-        SaveWrapper(addNewCharacter, {fullState, setState}).then(updatedQueue => {
-            setState({
-                ...fullState,
-                characters: [...fullState.characters, newCard],
-                selectedCharacter: fullState.characters.length,
-                actionQueue: updatedQueue
-            });
-        });
+        addCharacter(campaignId);
     }
 
-    useEffect(() => {
-        // initiate callback
-        setTimeout(() => validateHashTime(addNewCharacter.toString(), fullState.actionQueue), 3 * 1000); // 30s * 1000 = 30,000ms
-    }, [fullState.actionQueue])
-
-    const selectCharacter = (uuid: string) => {
-        const found = fullState.characters.filter(ch => ch.uid === uuid);
-        const index = fullState.characters.indexOf(found[0]);
-
-        setState({
-            ...fullState,
-            selectedCharacter: index
-        })
-    }
-
-    const updateList = () => {
-        const characters = getOrderedCharacterList();
+    const updateList = (chars: RootCharacter[]) => {
+        const characters = getOrderedCharacterList(chars);
         setOrder(characters);
     }
 
-    const getOrderedCharacterList = () => {
-        const session = getSession();
-        const pinned = fullState.characters.filter(c => c.pinned);
-        const notPinned = fullState.characters.filter(c => !c.pinned && c.session === session);
+    const getOrderedCharacterList = (chars: RootCharacter[]) => {
+        // const session = getSession();
+        const pinned = chars.filter(c => c.pinned);
+        const notPinned = chars.filter(c => !c.pinned && c.session === activeSession);
         return pinned.concat(notPinned);
     }
 
     // event listener for new session change
-    document.addEventListener('newSessionNumber', updateList)
+    // document.addEventListener('newSessionNumber', updateList)
     document.addEventListener('startSearch', ({detail}: any) => {
         const { characters } = detail;
         setSearchCharacters(characters);
         setSearching(true)
     });
     document.addEventListener('stopSearch',  () => setSearching(false));
+
+    const SessionInfo = () => {
+        
+        const numberOfCharacters = characters.filter(char => char.session === activeSession).length;
+
+        return (
+            <div className="session-info">
+                <Typography variant="body1" component="h3">Session: <strong>{activeSession}</strong></Typography>
+                <Typography variant="body1" component="h3">Num/Characters: <strong>{numberOfCharacters}</strong></Typography>
+            </div>
+        )
+    }
 
     return (
         <Grid container className="charGroup"
@@ -109,6 +98,13 @@ const CharacterGroup = () => {
             spacing={0}
         >
             <Grid item>
+                <HomeButton onClick={() => setCurrentCharacter(undefined)}/>
+            </Grid>
+
+            <Grid item>
+                <SessionInfo />
+            </Grid>
+            <Grid item>
                 <SearchBar />
             </Grid>
             {
@@ -118,7 +114,7 @@ const CharacterGroup = () => {
                             <Card
                                 deleteCard={deleteCard}
                                 pinCard={pinCard}
-                                select={() => selectCharacter(ch.uid)}
+                                select={() => handleSelect(ch.uid)}
                                 search={false}
                                 {...ch}
                             />
@@ -131,7 +127,7 @@ const CharacterGroup = () => {
                             <Card
                                 deleteCard={deleteCard}
                                 pinCard={pinCard}
-                                select={() => selectCharacter(ch.uid)}
+                                select={() => handleSelect(ch.uid)}
                                 search={true}
                                 {...ch}
                             />
@@ -140,10 +136,28 @@ const CharacterGroup = () => {
                 })
             }
             <Grid item onClick={addNewCharacter}>
-                <AddCard searching={searching}/>
+                <AddCard searching={searching} cid={campaignId}/>
             </Grid>
 
         </Grid>
+    )
+}
+
+const HomeButton = (props: { onClick: () => void}) => {
+    return (
+        <div id="homeButtonContainer">
+            <Button 
+                variant="contained" 
+                // placeholder={"Search All Sessions..."} 
+                fullWidth={true}
+                id="homeButton"
+                // value={val}
+                onClick={props.onClick}
+                // onChange={(e) => onChange(e.target.value)}
+            >
+                Campaign Dashboard
+            </Button>
+        </div>
     )
 }
 
