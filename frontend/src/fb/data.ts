@@ -24,22 +24,22 @@ export const addSession = (num: number) => {
 
 type AddCharacterProps = RootCharacter
 
-export const addCharacter = (ch: AddCharacterProps = basicCharacter) => {
+export const addCharacter = (cid: string, ch: AddCharacterProps = basicCharacter) => {
     const db = getDatabase(app);
     getFolderNumber()
     .then(charId => {
-        set(ref(db, 'characters/' + charId), {...ch, uid: charId })
+        set(ref(db, `campaigns/${cid}/characters/${charId}`), {...ch, uid: charId })
     });
 };
 
-export const setUpdateCharacter = (uid: number, newChar: RootCharacter) => {
+export const setUpdateCharacter = (uid: number, cid: string, newChar: RootCharacter) => {
     const db = getDatabase(app);
-    set(ref(db, 'characters/' + uid), newChar);
+    set(ref(db, `campaigns/${cid}/characters/${uid}`), newChar);
 }
 
-export const getCharacter = (uid: number): Promise<RootCharacter | undefined> => {
+export const getCharacter = (uid: number, cid: string): Promise<RootCharacter | undefined> => {
     const dbRef = ref(getDatabase());
-    return get(child(dbRef, `characters/${uid}`)).then((snapshot) => {
+    return get(child(dbRef, `campaigns/${cid}/characters/${uid}`)).then((snapshot) => {
     if (snapshot.exists()) {
         return snapshot.val();
     }
@@ -86,7 +86,7 @@ export const addCampaignSession = (cid: string) => {
         console.log("no campaigns selected");
         return;
     }
-    
+
     const db = getDatabase(app);
     const sessionRef = ref(db, `campaigns/${cid}/sessions`);
     get(sessionRef).then(snapshot => {

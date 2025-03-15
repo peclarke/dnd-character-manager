@@ -23,4 +23,5 @@ export type Campaign = {
     name: string;
     sessions: number;
     playerUuids: number[];
+    characters: RootCharacter[];
 }

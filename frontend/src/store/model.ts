@@ -1,4 +1,4 @@
-import { Action, action, computed, Computed, createStore, thunk, Thunk } from "easy-peasy";
+import { Action, action, computed, Computed, createStore, thunk, Thunk, useStoreState } from "easy-peasy";
 import { getDatabase, onValue, ref, update } from "firebase/database";
 import { Campaign, RootCharacter } from "../types/characters";
 import { getCampaignInfo, getCharacter, setUpdateCharacter } from "../fb/data";
@@ -32,7 +32,7 @@ export interface StoreModel {
     setCurrentEverywhere: Action<StoreModel, RootCharacter>;
 
     setSelected: Action<StoreModel, RootCharacter>;
-    setSelectedIndex: Thunk<StoreModel, number>;
+    setSelectedIndex: Action<StoreModel, number>;
 
     // campaign stuff
     campaign: CampaignModel;
@@ -51,7 +51,8 @@ export const store = createStore<StoreModel>({
             dmUuid: 0,
             name: "",
             sessions: 0,
-            playerUuids: []
+            playerUuids: [],
+            characters: [],
         },
         sessions: computed((state) => {
             if (state.campaignInfo) {
@@ -112,19 +113,19 @@ export const store = createStore<StoreModel>({
         state.characters = payload;
     }),
     getCharacters: thunk((actions, _payload) => {
-        console.log('[ACTION]: Get All Characters')
-        const db = getDatabase();
-        const charactersRef = ref(db, 'characters/');
-        onValue(charactersRef, (snapshot) => {
-            const data = snapshot.val();
-            const characters = Object.values(data) as RootCharacter[];
-            actions.setCharacters(characters);
-            // if (characters.length > 0) actions.setSelected(characters[0]);
-        });
+        // console.log('[ACTION]: Get All Characters')
+        // const db = getDatabase();
+        // const charactersRef = ref(db, `characters/`);
+        // onValue(charactersRef, (snapshot) => {
+        //     const data = snapshot.val();
+        //     const characters = Object.values(data) as RootCharacter[];
+        //     actions.setCharacters(characters);
+        //     // if (characters.length > 0) actions.setSelected(characters[0]);
+        // });
     }),
     setCurrentEverywhere: action((state, payload) => {
         state.currentCharacter = payload;
-        setUpdateCharacter(state.selectedIndex, payload);
+        setUpdateCharacter(state.selectedIndex, state.campaign.campaignId, payload);
     }),
 
     selectedIndex: -100,
@@ -134,7 +135,7 @@ export const store = createStore<StoreModel>({
         // check if the field is present in character
         if (field in state.currentCharacter) {
             const db = getDatabase();
-            getCharacter(state.selectedIndex)
+            getCharacter(state.selectedIndex, state.campaign.campaignId)
             .then(char => {
                 if (char === undefined) return;
                 const updates: Record<string, RootCharacter> = {}
@@ -156,21 +157,29 @@ export const store = createStore<StoreModel>({
         
     }),
     setSelected: action((state, payload) => {
-        state.selectedIndex = payload.uid;
+        // state.selectedIndex = payload.uid;
         state.currentCharacter = payload;
         
     }),
     // selectedCharacter: computed((state) => state.characters.filter((_, i) => i === state.selectedIndex)[0] ?? null)
 
-    setSelectedIndex: thunk(async (actions, payload) => {
-        const db = getDatabase();
-        const singleCharRef = ref(db, 'characters/' + payload);
-        onValue(singleCharRef, (snapshot) => {
-            const data = snapshot.val() as RootCharacter;
-            actions.setSelected(data);
-        }, {
-            onlyOnce: true
-        });
+    setSelectedIndex: action((state, payload) => {
+        state.selectedIndex = payload;
+        const current = state.characters.filter(character => character.uid === payload);
+        if (current.length !== 1) {
+            console.error(`Character with uid ${payload} not found.`);
+            return;
+        }
+
+        state.currentCharacter = current[0];
+        // const db = getDatabase();
+        // const singleCharRef = ref(db, `characters/` + payload);
+        // onValue(singleCharRef, (snapshot) => {
+        //     const data = snapshot.val() as RootCharacter;
+        //     actions.setSelected(data);
+        // }, {
+        //     onlyOnce: true
+        // });
     })
   });
 

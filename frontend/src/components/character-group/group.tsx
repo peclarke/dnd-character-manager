@@ -11,6 +11,7 @@ import { useStoreActions, useStoreState } from '../../store/hooks';
 
 const CharacterGroup = () => {
     const characters = useStoreState((state) => state.characters);
+    const campaignId = useStoreState((state) => state.campaign.campaignId);
 
     const [order, setOrder] = useState<RootCharacter[]>([]);
 
@@ -24,6 +25,10 @@ const CharacterGroup = () => {
     const delCard = useStoreActions(actions => actions.delCharacter);
     const selCard = useStoreActions(actions => actions.setSelectedIndex);
 
+    const handleSelect = (uid: number) => {
+        selCard(uid);
+    }
+
     const deleteCard = (uid: number) => {
         const db = getDatabase();
         const charactersRef = ref(db, 'characters/' + uid);
@@ -34,7 +39,7 @@ const CharacterGroup = () => {
     const pinCard = (uid: number) => {
         const db = getDatabase();
         const updates: Record<string, RootCharacter> = {};
-        getCharacter(uid)
+        getCharacter(uid, campaignId)
         .then(char => {
             if (char === undefined) return;
             updates["characters/" + uid] = {
@@ -46,7 +51,7 @@ const CharacterGroup = () => {
     }
 
     const addNewCharacter = () => {
-        addCharacter();
+        addCharacter(campaignId);
     }
 
     // useEffect(() => {
@@ -57,6 +62,7 @@ const CharacterGroup = () => {
     const updateList = (chars: RootCharacter[]) => {
         const characters = getOrderedCharacterList(chars);
         setOrder(characters);
+        console.log(characters);
     }
 
     const getOrderedCharacterList = (chars: RootCharacter[]) => {
@@ -93,7 +99,7 @@ const CharacterGroup = () => {
                             <Card
                                 deleteCard={deleteCard}
                                 pinCard={pinCard}
-                                select={() => selCard(ch.uid)}
+                                select={() => handleSelect(ch.uid)}
                                 search={false}
                                 {...ch}
                             />
@@ -106,7 +112,7 @@ const CharacterGroup = () => {
                             <Card
                                 deleteCard={deleteCard}
                                 pinCard={pinCard}
-                                select={() => selCard(ch.uid)}
+                                select={() => handleSelect(ch.uid)}
                                 search={true}
                                 {...ch}
                             />

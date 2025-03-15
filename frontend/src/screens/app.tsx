@@ -1,8 +1,10 @@
 import Grid from "@mui/material/Grid";
 import CharacterGroup from "../components/character-group/group";
 import CharacterData from "../components/character/character";
-import { useStoreActions } from "../store/hooks";
+import { useStoreActions, useStoreState } from "../store/hooks";
 import { useEffect } from "react";
+import { getDatabase, onValue, ref } from "firebase/database";
+import { RootCharacter } from "../types/characters";
 
 
 const App = () => {
@@ -12,11 +14,29 @@ const App = () => {
 }
 
 const AppChildren = () => {
-    const loadCharacters = useStoreActions(actions => actions.getCharacters);
+    // const loadCharacters = useStoreActions(actions => actions.getCharacters);
+
+    const campaignId = useStoreState(state => state.campaign.campaignId);
+    const setCharacters = useStoreActions(actions => actions.setCharacters);
 
     useEffect(() => {
-        loadCharacters();
-    }, []);
+        if (campaignId === "none") return;
+        console.log('[ACTION]: Get All Characters')
+        const db = getDatabase();
+        const charactersRef = ref(db, `campaigns/${campaignId}/characters/`);
+        const unsubscribe = onValue(charactersRef, (snapshot) => {
+            const data = snapshot.val();
+            // check if there are no characters
+            if (data) { 
+                const characters = Object.values(data) as RootCharacter[];
+                setCharacters(characters);
+            }
+        });
+
+        return () => {
+            unsubscribe();
+        }
+    }, [campaignId]);
 
     return (
         <div style={{flexGrow: 1}}>

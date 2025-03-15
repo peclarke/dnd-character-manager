@@ -7,12 +7,15 @@ import { useStoreActions, useStoreState } from "../../store/hooks";
 
 const CharacterData = () => {
     const curChar = useStoreState(state => state.currentCharacter);
+    const characters = useStoreState(state => state.characters);
+
+    const selIndex = useStoreState(state => state.selectedIndex);
 
     const [data, setData] = useState<RootCharacter>();
 
     useEffect(() => {
         setData(curChar)
-    }, [curChar])
+    }, [selIndex])
 
     const [modalOpen, setModalOpen] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState("");
