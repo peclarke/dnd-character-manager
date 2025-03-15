@@ -4,7 +4,6 @@ import './group.css'
 import { useEffect, useState } from 'react';
 import { getSession } from '../character/utils';
 import SearchBar from './search';
-// import { validateHashTime } from '../../fb/utils';
 import { getDatabase, ref, update, remove } from "firebase/database";
 import { RootCharacter } from '../../types/characters';
 import { addCharacter, getCharacter } from '../../fb/data';

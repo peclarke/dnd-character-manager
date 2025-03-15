@@ -1,19 +1,13 @@
 import Grid from "@mui/material/Grid";
 import CharacterGroup from "../components/character-group/group";
 import CharacterData from "../components/character/character";
-import { StoreProvider } from "easy-peasy";
-import { store } from "../store/model";
 import { useStoreActions } from "../store/hooks";
 import { useEffect } from "react";
 
 
 const App = () => {
     return (
-        <>
-        <StoreProvider store={store}>
-            <AppChildren />
-        </StoreProvider>
-        </>
+        <AppChildren />
     )
 }
 

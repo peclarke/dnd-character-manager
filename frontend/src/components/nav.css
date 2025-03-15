@@ -70,3 +70,10 @@ a:visited {
     opacity: 1;
     /* transition: 0.1s; */
 }
+
+.nav-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}

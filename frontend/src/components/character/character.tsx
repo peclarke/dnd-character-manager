@@ -2,9 +2,8 @@ import Card from "@mui/material/Card";
 import "./char.css"
 import { CardContent, Typography, Grid, Avatar, TextField, Modal, Box, Button, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
-import { CharacterView, RootCharacter } from "../../types/characters";
+import { RootCharacter } from "../../types/characters";
 import { useStoreActions, useStoreState } from "../../store/hooks";
-import { updateCharacter } from "../../fb/data";
 
 const CharacterData = () => {
     const curChar = useStoreState(state => state.currentCharacter);
@@ -12,7 +11,6 @@ const CharacterData = () => {
     const [data, setData] = useState<RootCharacter>();
 
     useEffect(() => {
-        // console.log('fuck you', curChar.uid);
         setData(curChar)
     }, [curChar])
 
@@ -21,12 +19,11 @@ const CharacterData = () => {
     const openAvatarModal = () => setModalOpen(true);
     const closeAvatarModal = () => {setModalOpen(false); setAvatarUrl("")};
 
-    const updateCharacterState = useStoreActions(actions => actions.updatedSelected)
+    const updateCharacter = useStoreActions(actions => actions.updatedSelected)
     
     const handleChange = (value: string, field: string) => { 
         if (curChar) {
-            updateCharacter(curChar?.uid, field, value);
-            updateCharacterState({ field: field, value: value});
+            updateCharacter({ field: field, value: value});
         } 
     };
 

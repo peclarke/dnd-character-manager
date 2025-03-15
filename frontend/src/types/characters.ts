@@ -16,3 +16,11 @@ export type RootCharacter = {
 export type CharacterView = {
     data: RootCharacter;
 }
+
+export type Campaign = {
+    cid: string;
+    dmUuid: number;
+    name: string;
+    sessions: number;
+    playerUuids: number[];
+}

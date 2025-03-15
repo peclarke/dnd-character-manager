@@ -1,7 +1,19 @@
-import { Action, action, createStore, thunk, Thunk } from "easy-peasy";
+import { Action, action, computed, Computed, createStore, thunk, Thunk } from "easy-peasy";
 import { getDatabase, onValue, ref, update } from "firebase/database";
-import { RootCharacter } from "../types/characters";
-import { setUpdateCharacter } from "../fb/data";
+import { Campaign, RootCharacter } from "../types/characters";
+import { getCampaignInfo, getCharacter, setUpdateCharacter } from "../fb/data";
+
+interface CampaignModel {
+    campaignId: string;
+    campaignInfo: Campaign | null;
+    sessions: Computed<CampaignModel, number>;
+    activeSession: number;
+
+    setCampaignId: Action<CampaignModel, string>;
+    setCampaignInfo: Action<CampaignModel, Campaign | null>;
+    setSessions: Action<CampaignModel, number>;
+    setActiveSession: Action<CampaignModel, number>;
+}
 
 export interface StoreModel {
     uuid: string;
@@ -21,6 +33,9 @@ export interface StoreModel {
 
     setSelected: Action<StoreModel, RootCharacter>;
     setSelectedIndex: Thunk<StoreModel, number>;
+
+    // campaign stuff
+    campaign: CampaignModel;
 }
 
 export const store = createStore<StoreModel>({
@@ -28,6 +43,48 @@ export const store = createStore<StoreModel>({
     setUuid: action((state, payload) => {
         state.uuid = payload;
     }),
+
+    campaign: {    
+        campaignId: "none",
+        campaignInfo: {
+            cid: "",
+            dmUuid: 0,
+            name: "",
+            sessions: 0,
+            playerUuids: []
+        },
+        sessions: computed((state) => {
+            if (state.campaignInfo) {
+                return state.campaignInfo.sessions
+            } else {
+                return -1;
+            }
+        }),
+        activeSession: 0,
+
+        setCampaignInfo: action((state, payload) => {
+            state.campaignInfo = payload;
+        }),
+        setCampaignId: action((state, payload) => {
+            state.campaignId = payload
+        }),
+        setSessions: action((state, payload) => {
+            const db = getDatabase();
+            getCampaignInfo(state.campaignId)
+            .then(campaign => {
+                const updates: Record<string, any> = {}
+                updates["campaigns/" + campaign.cid] = {
+                    ...campaign,
+                    sessions: payload,
+                }
+                update(ref(db), updates)
+            })
+            state.sessions = payload;
+
+        }),
+        setActiveSession: action((state, payload) => {state.activeSession = payload}),
+    },
+
 
     characters: [],
     currentCharacter: {
@@ -76,17 +133,17 @@ export const store = createStore<StoreModel>({
         if (state.currentCharacter === null || state.currentCharacter === undefined) return;
         // check if the field is present in character
         if (field in state.currentCharacter) {
-            // const db = getDatabase();
-            // getCharacter(state.selectedIndex)
-            // .then(char => {
-            //     if (char === undefined) return;
-            //     const updates: Record<string, RootCharacter> = {}
-            //     updates["characters/" + char.uid] = {
-            //         ...char,
-            //         [field]: value
-            //     }
-            //     update(ref(db), updates)
-            // })
+            const db = getDatabase();
+            getCharacter(state.selectedIndex)
+            .then(char => {
+                if (char === undefined) return;
+                const updates: Record<string, RootCharacter> = {}
+                updates["characters/" + char.uid] = {
+                    ...char,
+                    [field]: value
+                }
+                update(ref(db), updates)
+            })
 
             state.currentCharacter = {
                 ...state.currentCharacter,

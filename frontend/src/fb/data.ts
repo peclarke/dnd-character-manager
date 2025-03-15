@@ -1,7 +1,7 @@
-import { child, get, getDatabase, onValue, push, ref, set, update } from "firebase/database"
+import { child, get, getDatabase, push, ref, set } from "firebase/database"
 import { app } from "./firebase";
 import { UserMetadata } from "firebase/auth";
-import { RootCharacter } from "../types/characters";
+import { Campaign, RootCharacter } from "../types/characters";
 import { basicCharacter } from "../components/character/utils";
 
 type UserInfoProps = {
@@ -26,7 +26,7 @@ type AddCharacterProps = RootCharacter
 
 export const addCharacter = (ch: AddCharacterProps = basicCharacter) => {
     const db = getDatabase(app);
-    getCharacterNumbers()
+    getFolderNumber()
     .then(charId => {
         set(ref(db, 'characters/' + charId), {...ch, uid: charId })
     });
@@ -35,20 +35,6 @@ export const addCharacter = (ch: AddCharacterProps = basicCharacter) => {
 export const setUpdateCharacter = (uid: number, newChar: RootCharacter) => {
     const db = getDatabase(app);
     set(ref(db, 'characters/' + uid), newChar);
-}
-
-export const updateCharacter = (uid: number, field: string, value: string) => {
-    const db = getDatabase();
-    getCharacter(uid)
-    .then(char => {
-        if (char === undefined) return;
-        const updates: Record<string, RootCharacter> = {}
-        updates["characters/" + char.uid] = {
-            ...char,
-            [field]: value
-        }
-        update(ref(db), updates)
-    })
 }
 
 export const getCharacter = (uid: number): Promise<RootCharacter | undefined> => {
@@ -62,10 +48,63 @@ export const getCharacter = (uid: number): Promise<RootCharacter | undefined> =>
     });
 }
 
+export const addCampaign = (
+        name: string = "New Campaign", 
+        sessions: number = 1, 
+        dmUuid: number = -1,
+        playerUuids: number[] = [-1, -2],
+    ) => {
+    const db = getDatabase(app);
+    const uniqiueCampaignIdentifier = 'jaspar_tyranny_of_dragons_20242025';
+    const campaignOpts = {cid: uniqiueCampaignIdentifier, name: name, sessions: sessions, dmUuid: dmUuid, playerUuids: playerUuids};
+    set(ref(db, 'campaigns/' + uniqiueCampaignIdentifier), campaignOpts)
+}
 
-export const DevTool = () => {
-    console.log("dev tool active")
-    addCharacter();
+export const getCampaignInfo = async (cid: string): Promise<Campaign> => {
+    const db = getDatabase(app);
+    const sessions = await get(ref(db, `campaigns/${cid}`));
+    return sessions.val();
+}
+
+export const getAllCampaignIds = () => {
+    const db = getDatabase(app);
+    return get(ref(db, 'campaigns')).then((snapshot) => {
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            return Object.keys(data);
+        } else {
+            return [];
+        }
+    }).catch((error) => {
+        console.error(error);
+        return [];
+    });
+}
+
+export const addCampaignSession = (cid: string) => {
+    if (cid === "none") {
+        console.log("no campaigns selected");
+        return;
+    }
+    
+    const db = getDatabase(app);
+    const sessionRef = ref(db, `campaigns/${cid}/sessions`);
+    get(sessionRef).then(snapshot => {
+        if (snapshot.exists()) {
+            const num = snapshot.val();
+            set(sessionRef, num + 1);
+        } else {
+            set(sessionRef, 1);
+        }
+    });
+}
+
+
+export const DevTool = async () => {
+    console.log("DEV TOOL PRESSED");
+    // addCampaign();
+    // getCampaignInfo('jaspar_tyranny_of_dragons_20242025');
+    // console.log(await getAllCampaignIds());
 }
 
 /**
@@ -73,9 +112,9 @@ export const DevTool = () => {
  * and counting the number of characters. 
  * @returns 
  */
-const getCharacterNumbers = (): Promise<number> => {
+const getFolderNumber = (folder: string = 'characters'): Promise<number> => {
     const dbRef = ref(getDatabase());
-    return get(child(dbRef, `characters/`))
+    return get(child(dbRef, `${folder}/`))
         .then((snapshot) => {
         if (snapshot.exists()) {
             const data = snapshot.val();
