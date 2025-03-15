@@ -2,7 +2,6 @@ import Grid from '@mui/material/Grid';
 import Card, { AddCard } from './card';
 import './group.css'
 import { useEffect, useState } from 'react';
-import { getSession } from '../character/utils';
 import SearchBar from './search';
 import { getDatabase, ref, update, remove } from "firebase/database";
 import { RootCharacter } from '../../types/characters';
@@ -12,12 +11,13 @@ import { useStoreActions, useStoreState } from '../../store/hooks';
 const CharacterGroup = () => {
     const characters = useStoreState((state) => state.characters);
     const campaignId = useStoreState((state) => state.campaign.campaignId);
+    const activeSession = useStoreState((state) => state.campaign.activeSession);
 
     const [order, setOrder] = useState<RootCharacter[]>([]);
 
     useEffect(() => {
         updateList(characters);
-    }, [characters])
+    }, [characters, activeSession])
 
     const [searching, setSearching] = useState(false);
     const [searchCharacters, setSearchCharacters] = useState<RootCharacter[]>([]);
@@ -65,9 +65,9 @@ const CharacterGroup = () => {
     }
 
     const getOrderedCharacterList = (chars: RootCharacter[]) => {
-        const session = getSession();
+        // const session = getSession();
         const pinned = chars.filter(c => c.pinned);
-        const notPinned = chars.filter(c => !c.pinned && c.session === session);
+        const notPinned = chars.filter(c => !c.pinned && c.session === activeSession);
         return pinned.concat(notPinned);
     }
 

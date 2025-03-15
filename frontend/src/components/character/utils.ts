@@ -12,9 +12,3 @@ export const basicCharacter: RootCharacter = {
     session: 1,
     uid: -1,
 }
-
-export const getSession = () => {
-    const session = localStorage.getItem("activeSession");
-    if (session) return parseInt(session);
-    return 1;
-}

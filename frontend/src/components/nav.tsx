@@ -84,8 +84,9 @@ const NewNav = () => {
     const setCampaign = useStoreActions(actions => actions.campaign.setCampaignInfo);
 
     const maxSessions = useStoreState(state => state.campaign.sessions); //useMemo(() => useStoreState(state => state.campaign.sessions), [campaignId]);
-
-    const [activeSession, setActiveSession] = useState<number>();
+    const activeSession = useStoreState(state => state.campaign.activeSession);
+    const setActive = useStoreActions(actions => actions.campaign.setActiveSession);
+    // const [activeSession, setActiveSession] = useState<number>();
 
     /**
      * Listen for any campaign id changes. Create and close a listener for each campaign id. 
@@ -123,18 +124,18 @@ const NewNav = () => {
     }
 
     const setNewActive = (session: number) => {
-        localStorage.setItem('activeSession', session.toString())
-        setActiveSession(session)
+        // localStorage.setItem('activeSession', session.toString())
+        setActive(session)
         // black magic sorcery
         document.dispatchEvent(event);
     }
 
     useEffect(() => {
-        const activeNum = localStorage.getItem('activeSession');
-        if (activeNum) {
-            const validated = validateSession(parseInt(activeNum))
-            setActiveSession(validated)
-        }
+        // const activeNum = localStorage.getItem('activeSession');
+        // if (activeNum) {
+        const validated = validateSession(activeSession);
+        setActive(validated)
+        // }
     }, [])
 
     return (

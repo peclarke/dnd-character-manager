@@ -51,16 +51,22 @@ const CharacterData = () => {
                     Essential Info
                 </Typography>
                 <Grid container marginTop={3}>
-                    <Grid item xs={2} style={{
-                        display: "flex",
-                        justifyContent: "left",
-                        alignItems: "center"
-                    }}>
+                    <Grid item 
+                        xs={2}
+                        style={{
+                            display: "flex",
+                            justifyContent: "left",
+                            alignItems: "center",
+                            // marginRight: 15,
+                        }}
+                    >
                         <Tooltip title="Change avatar photo">
                             <Avatar alt={data.name} src={data.avatar} onClick={openAvatarModal}
                                 sx={{
                                     width: "80%",
+                                    // width: 150,
                                     maxHeight: "15vh",
+                                    // height: 150,
                                     height: "100%",
                                     cursor: "pointer"
                                 }}>
