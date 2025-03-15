@@ -139,8 +139,8 @@ export const store = createStore<StoreModel>({
             .then(char => {
                 if (char === undefined) return;
                 const updates: Record<string, RootCharacter> = {}
-                updates["characters/" + char.uid] = {
-                    ...char,
+                updates[`campaigns/${char.cid}/characters/${char.character.uid}`] = {
+                    ...char.character,
                     [field]: value
                 }
                 update(ref(db), updates)

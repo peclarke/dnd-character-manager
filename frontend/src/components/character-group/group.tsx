@@ -42,9 +42,9 @@ const CharacterGroup = () => {
         getCharacter(uid, campaignId)
         .then(char => {
             if (char === undefined) return;
-            updates[`campaigns/${campaignId}/characters/${uid}`] = {
-                ...char,
-                pinned: !char["pinned"]
+            updates[`campaigns/${campaignId}/characters/${char.character.uid}`] = {
+                ...char.character,
+                pinned: !char.character["pinned"]
             }
             update(ref(db), updates)
         })
@@ -62,7 +62,6 @@ const CharacterGroup = () => {
     const updateList = (chars: RootCharacter[]) => {
         const characters = getOrderedCharacterList(chars);
         setOrder(characters);
-        console.log(characters);
     }
 
     const getOrderedCharacterList = (chars: RootCharacter[]) => {

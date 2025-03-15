@@ -37,11 +37,11 @@ export const setUpdateCharacter = (uid: number, cid: string, newChar: RootCharac
     set(ref(db, `campaigns/${cid}/characters/${uid}`), newChar);
 }
 
-export const getCharacter = (uid: number, cid: string): Promise<RootCharacter | undefined> => {
+export const getCharacter = (uid: number, cid: string): Promise<{ character: RootCharacter, cid: string } | undefined | void> => {
     const dbRef = ref(getDatabase());
     return get(child(dbRef, `campaigns/${cid}/characters/${uid}`)).then((snapshot) => {
     if (snapshot.exists()) {
-        return snapshot.val();
+        return { character: snapshot.val() as RootCharacter, cid: cid };
     }
     }).catch((error) => {
         console.error(error);

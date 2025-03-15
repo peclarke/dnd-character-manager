@@ -8,13 +8,11 @@ import { useStoreActions, useStoreState } from "../../store/hooks";
 const CharacterData = () => {
     const curChar = useStoreState(state => state.currentCharacter);
 
-    const selIndex = useStoreState(state => state.selectedIndex);
-
     const [data, setData] = useState<RootCharacter>();
 
     useEffect(() => {
         setData(curChar)
-    }, [selIndex])
+    }, [curChar])
 
     const [modalOpen, setModalOpen] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState("");
@@ -24,6 +22,7 @@ const CharacterData = () => {
     const updateCharacter = useStoreActions(actions => actions.updatedSelected)
     
     const handleChange = (value: string, field: string) => { 
+        console.log(curChar);
         if (curChar) {
             updateCharacter({ field: field, value: value});
         } 
