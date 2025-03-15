@@ -7,6 +7,7 @@ import { getDatabase, ref, update, remove } from "firebase/database";
 import { RootCharacter } from '../../types/characters';
 import { addCharacter, getCharacter } from '../../fb/data';
 import { useStoreActions, useStoreState } from '../../store/hooks';
+import { Button, Typography } from '@mui/material';
 
 const CharacterGroup = () => {
     const characters = useStoreState((state) => state.characters);
@@ -24,6 +25,7 @@ const CharacterGroup = () => {
 
     const delCard = useStoreActions(actions => actions.delCharacter);
     const selCard = useStoreActions(actions => actions.setSelectedIndex);
+    const setCurrentCharacter = useStoreActions(actions => actions.setSelected);
 
     const handleSelect = (uid: number) => {
         selCard(uid);
@@ -54,11 +56,6 @@ const CharacterGroup = () => {
         addCharacter(campaignId);
     }
 
-    // useEffect(() => {
-    //     // initiate callback
-    //     setTimeout(() => validateHashTime(addNewCharacter.toString(), fullState.actionQueue), 3 * 1000); // 30s * 1000 = 30,000ms
-    // }, [fullState.actionQueue])
-
     const updateList = (chars: RootCharacter[]) => {
         const characters = getOrderedCharacterList(chars);
         setOrder(characters);
@@ -80,6 +77,18 @@ const CharacterGroup = () => {
     });
     document.addEventListener('stopSearch',  () => setSearching(false));
 
+    const SessionInfo = () => {
+        
+        const numberOfCharacters = characters.filter(char => char.session === activeSession).length;
+
+        return (
+            <div className="session-info">
+                <Typography variant="body1" component="h3">Session: <strong>{activeSession}</strong></Typography>
+                <Typography variant="body1" component="h3">Num/Characters: <strong>{numberOfCharacters}</strong></Typography>
+            </div>
+        )
+    }
+
     return (
         <Grid container className="charGroup"
             sx={{
@@ -88,6 +97,13 @@ const CharacterGroup = () => {
             }}
             spacing={0}
         >
+            <Grid item>
+                <HomeButton onClick={() => setCurrentCharacter(undefined)}/>
+            </Grid>
+
+            <Grid item>
+                <SessionInfo />
+            </Grid>
             <Grid item>
                 <SearchBar />
             </Grid>
@@ -120,10 +136,28 @@ const CharacterGroup = () => {
                 })
             }
             <Grid item onClick={addNewCharacter}>
-                <AddCard searching={searching}/>
+                <AddCard searching={searching} cid={campaignId}/>
             </Grid>
 
         </Grid>
+    )
+}
+
+const HomeButton = (props: { onClick: () => void}) => {
+    return (
+        <div id="homeButtonContainer">
+            <Button 
+                variant="contained" 
+                // placeholder={"Search All Sessions..."} 
+                fullWidth={true}
+                id="homeButton"
+                // value={val}
+                onClick={props.onClick}
+                // onChange={(e) => onChange(e.target.value)}
+            >
+                Campaign Dashboard
+            </Button>
+        </div>
     )
 }
 

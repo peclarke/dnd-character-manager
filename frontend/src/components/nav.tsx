@@ -108,9 +108,7 @@ const NewNav = () => {
 
     const addSession = () => {
         addCampaignSession(campaignId);
-        // const newMax = maxSessions + 1;
-        // setSess(newMax);
-        // setActive(newMax);
+        setActive(maxSessions+1);
     }
 
     const validateSession = (session: number) => {
@@ -142,15 +140,20 @@ const NewNav = () => {
         <Box className="nav">
             <div>
                 <h3><a href="/">Character Manager</a></h3>
-                <Link href="/">Dashboard</Link>
+                <Link href="/">Manager</Link>
                 <Link href="/help">Help</Link>
-                <Button onClick={DevTool}>Dev Button</Button>
-                <div className="sessions">
+                {import.meta.env.DEV && <Button onClick={DevTool}>Dev Button</Button>}
+                {/* <div className="sessions">
                     {
                         maxSessions >= 0 ? [...Array(maxSessions)].map((_, num) => <NumberCard key={"el-"+num} number={num + 1} active={(num + 1) === activeSession} onClick={() => setNewActive(num + 1)}/>) : null
                     }
                     { maxSessions >= 0 ? <AddSessionCard onClick={addSession}/> : null }
+                </div> */}
+                <div className="sessions">
+                    { campaignId !== "none" ? <SessionSelector activeSession={activeSession} setActive={setActive} sessions={maxSessions}/> : null}
+                    { campaignId !== "none" ? <AddSessionCard onClick={addSession}/> : null }
                 </div>
+
             </div>
             <div className="nav-right">
                 <CampaignSelector />
@@ -169,9 +172,30 @@ const NewNav = () => {
     )
 }
 
+const SessionSelector = ({activeSession, sessions, setActive}: {activeSession: number, setActive: (foo: number) => void, sessions: number}) => {
+    if (sessions === -1) return;
+    return (
+        <Tooltip title={"Select specific session"}> 
+        <FormControl size="small" sx={{minWidth: 20, maxWidth: "5vw"}}>
+            <Select
+                id="session-selector"
+                value={activeSession}
+                onChange={(e) => setActive(e.target.value as number)}
+            >
+                <MenuItem key={"session-0"} value={0}>0</MenuItem>
+                {
+                    [...Array(sessions)].map((_, num) => <MenuItem key={"session-"+(num + 1)} value={num + 1}>{num + 1}</MenuItem>)
+                }
+            </Select>
+        </FormControl>
+        </Tooltip>
+    )
+}
+
 const CampaignSelector = () => {
     const setCampaignId = useStoreActions(actions => actions.campaign.setCampaignId);
     const setCampaignInfo = useStoreActions(actions => actions.campaign.setCampaignInfo);
+    const setActiveSession = useStoreActions(actions => actions.campaign.setActiveSession);
     const campaign = useStoreState(state => state.campaign.campaignId);
 
     const [cids, setCids] = useState<string[]>();
@@ -192,6 +216,7 @@ const CampaignSelector = () => {
             if (campaign === null) return;
             setCampaignInfo(campaign);
             setCampaignId(campaign.cid);
+            setActiveSession(campaign.sessions);
         })
         .catch(err => {
             console.error("Error fetching campaign info:", err);
@@ -199,6 +224,7 @@ const CampaignSelector = () => {
     }
 
     return (
+        // <Tooltip title="Select a campaign">
         <FormControl size="small" sx={{width: "15vw"}}>
             <Select
                 id="campaign-selector"
@@ -214,6 +240,7 @@ const CampaignSelector = () => {
                 {/* <MenuItem value={"jaspar_tyranny_of_dragons_20242025"}>Jaspar's Tyranny of Dragon's</MenuItem> */}
             </Select>
         </FormControl>
+        // </Tooltip>
     )
 }
 

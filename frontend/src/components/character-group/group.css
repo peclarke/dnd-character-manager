@@ -43,6 +43,52 @@
     color: rgb(208, 0, 0);
 }
 
+.noselection {
+    background-color: white;
+    margin: 2em;
+    margin-top: 0;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 2em;
+    padding-top: 1em;
+    height: auto;
+}
+
+.noselection > span {
+    display: block;
+    margin-top: 1em;
+}
+
+.campaigndata-odd, .campaigndata-even {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#campaignInfo {
+    text-align: left;
+    margin-top: 1em;
+}
+
+#campaignInfo>*>tr>th, #campaignInfo>*>tr>td {
+    border: 1px solid black;
+    padding: 1em;
+}
+
+#nocampaignalert {
+    margin-top: 1em;
+}
+
+#homeButtonContainer {
+    margin-top: 0.5em;
+}
+
+#homeButton {
+    height: 100%;
+    /* background-color: white; */
+    /* color: black; */
+}
+
 @media (min-width: 800px) {
     .card-avatar {
         display: flex;

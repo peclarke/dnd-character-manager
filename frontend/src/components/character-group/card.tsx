@@ -23,6 +23,10 @@ const Card = (props: CardProps) => {
 
     const matches = useMediaQuery('(min-width: 0px) and (max-width: 800px)');
 
+    const confirmDelete = () => {
+        window.confirm(`Are you sure you want to delete ${props.name}?`) && props.deleteCard(props.uid);
+    }
+
     return (
         <Grid container spacing={0} className={props.pinned ? "pinned-card pin-card" : "character-card"}>
             <Grid item xs={2} className="card-avatar" onClick={props.select}>
@@ -38,17 +42,18 @@ const Card = (props: CardProps) => {
                                 : mouseIn ? pinFilled : pinNotFilled}
                 </Tooltip>
                 <Tooltip title="Delete character">
-                    <CloseOutlinedIcon className="delete-btn" onClick={(_e) => props.deleteCard(props.uid)}/>
+                    <CloseOutlinedIcon className="delete-btn" onClick={confirmDelete}/>
                 </Tooltip>
             </Grid>
         </Grid>
     )
 }
 
-export const AddCard = (props: {searching: boolean}) => {
+export const AddCard = (props: {searching: boolean, cid: string}) => {
+    const errMsg = props.cid === "none" ? "No campaign has been selected" : "You cannot add a character whilst searching";
     return (
-        <Tooltip title={props.searching ? "You cannot add a character whilst searching" : "Add a new character"}>
-            <div className={!props.searching ? "add-character" : "add-search"}
+        <Tooltip title={props.searching || props.cid === "none" ? errMsg : "Add a new character"}>
+            <div className={!props.searching && props.cid !== "none" ? "add-character" : "add-search"}
                 style={{
                     minHeight: "1vh",
                     display: "flex",

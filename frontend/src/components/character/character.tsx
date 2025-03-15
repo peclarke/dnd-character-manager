@@ -1,12 +1,14 @@
 import Card from "@mui/material/Card";
 import "./char.css"
-import { CardContent, Typography, Grid, Avatar, TextField, Modal, Box, Button, Tooltip } from "@mui/material";
+import { CardContent, Typography, Grid, Avatar, TextField, Modal, Box, Button, Tooltip, Alert } from "@mui/material";
 import { useEffect, useState } from "react";
-import { RootCharacter } from "../../types/characters";
+import { Campaign, RootCharacter } from "../../types/characters";
 import { useStoreActions, useStoreState } from "../../store/hooks";
 
 const CharacterData = () => {
     const curChar = useStoreState(state => state.currentCharacter);
+    const campaign = useStoreState(state => state.campaign.campaignInfo);
+    const cid = useStoreState(state => state.campaign.campaignId);
 
     const [data, setData] = useState<RootCharacter>();
 
@@ -22,7 +24,6 @@ const CharacterData = () => {
     const updateCharacter = useStoreActions(actions => actions.updatedSelected)
     
     const handleChange = (value: string, field: string) => { 
-        console.log(curChar);
         if (curChar) {
             updateCharacter({ field: field, value: value});
         } 
@@ -120,7 +121,61 @@ const CharacterData = () => {
             </CardContent>
         </Card>
         <Notes {...data}/>      
-    </div> : <p>Please select a character</p>       
+    </div> : <div className="characterData"><NoSelection cid={cid} campaignInfo={campaign}/></div>       
+    )
+}
+
+const NoSelection = (props: {cid: string, campaignInfo: Campaign | null}) => {
+
+    const noCampaign = <>
+        <Alert id="nocampaignalert" severity="info">No campaign has been selected. Select a campaign in the navigation dropdown.</Alert>
+    </>
+
+    const Home = <>
+        <Typography variant="body1" component="p">Here's our campaign information</Typography>
+        {props.campaignInfo && <CampaignData campaign={props.campaignInfo}/>}
+    </>
+
+    return (
+        <div className="noselection">
+            <Typography variant="h4" component="h1">Campaign Information Screen</Typography>
+            {props.cid === "none" ? noCampaign : Home}
+        </div>
+    )
+}
+
+const CampaignData = (props: {campaign: Campaign}) => {
+    return (
+        <table id="campaignInfo">
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Campaign Name</td>
+                    <td>{props.campaign.name}</td>
+                </tr>
+                <tr>
+                    <td>DM Player ID</td>
+                    <td>{props.campaign.dmUuid}</td>
+                </tr>
+                <tr>
+                    <td>Number of Sessions</td>
+                    <td>{props.campaign.sessions}</td>
+                </tr>
+                <tr>
+                    <td>Number of Players</td>
+                    <td>{props.campaign.playerUuids.length}</td>
+                </tr>
+                <tr>
+                    <td>Number of Characters</td>
+                    <td>{Object.keys(props.campaign.characters).length}</td>
+                </tr>
+            </tbody>
+        </table>
     )
 }
 

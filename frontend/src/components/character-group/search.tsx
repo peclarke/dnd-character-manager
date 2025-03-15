@@ -5,6 +5,7 @@ import { useStoreState } from "../../store/hooks";
 
 const SearchBar = () => {
     const characters = useStoreState(state => state.characters);
+    const campaignId = useStoreState(state => state.campaign.campaignId);
 
     const [val, setVal] = useState<string>("");
 
@@ -89,6 +90,7 @@ const SearchBar = () => {
                 fullWidth={true}
                 value={val}
                 onChange={(e) => onChange(e.target.value)}
+                disabled={campaignId === "none"}
             ></TextField>
         </div>
     )

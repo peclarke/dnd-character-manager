@@ -18,9 +18,13 @@ const AppChildren = () => {
 
     const campaignId = useStoreState(state => state.campaign.campaignId);
     const setCharacters = useStoreActions(actions => actions.setCharacters);
+    const setCurrent = useStoreActions(actions => actions.setSelected);
 
     useEffect(() => {
-        if (campaignId === "none") return;
+        if (campaignId === "none") {
+            setCharacters([]);
+            setCurrent(undefined);
+        }
         console.log('[ACTION]: Get All Characters')
         const db = getDatabase();
         const charactersRef = ref(db, `campaigns/${campaignId}/characters/`);

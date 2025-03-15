@@ -31,7 +31,7 @@ export interface StoreModel {
     updatedSelected: Action<StoreModel, { field: string, value: string | number }>;
     setCurrentEverywhere: Action<StoreModel, RootCharacter>;
 
-    setSelected: Action<StoreModel, RootCharacter>;
+    setSelected: Action<StoreModel, RootCharacter | undefined>;
     setSelectedIndex: Action<StoreModel, number>;
 
     // campaign stuff
