@@ -31,7 +31,7 @@ const CharacterGroup = () => {
 
     const deleteCard = (uid: number) => {
         const db = getDatabase();
-        const charactersRef = ref(db, 'characters/' + uid);
+        const charactersRef = ref(db, `campaigns/${campaignId}/characters/${uid}`);
         remove(charactersRef);
         delCard(uid);
     }
@@ -42,7 +42,7 @@ const CharacterGroup = () => {
         getCharacter(uid, campaignId)
         .then(char => {
             if (char === undefined) return;
-            updates["characters/" + uid] = {
+            updates[`campaigns/${campaignId}/characters/${uid}`] = {
                 ...char,
                 pinned: !char["pinned"]
             }

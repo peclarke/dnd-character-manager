@@ -7,7 +7,6 @@ import { useStoreActions, useStoreState } from "../../store/hooks";
 
 const CharacterData = () => {
     const curChar = useStoreState(state => state.currentCharacter);
-    const characters = useStoreState(state => state.characters);
 
     const selIndex = useStoreState(state => state.selectedIndex);
 
