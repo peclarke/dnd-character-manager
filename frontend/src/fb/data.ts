@@ -140,6 +140,6 @@ const getFolderNumber = (folder: string = 'characters'): Promise<number> => {
  * @param name 
  * @returns 
  */
-const cleanName = (name: string) => {
-    return name.replace(/\s/g, "").toLowerCase()
-}
+// const cleanName = (name: string) => {
+//     return name.replace(/\s/g, "").toLowerCase()
+// }

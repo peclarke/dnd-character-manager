@@ -1,5 +1,5 @@
-import { Action, action, computed, Computed, createStore, thunk, Thunk, useStoreState } from "easy-peasy";
-import { getDatabase, onValue, ref, update } from "firebase/database";
+import { Action, action, computed, Computed, createStore, thunk, Thunk } from "easy-peasy";
+import { getDatabase, ref, update } from "firebase/database";
 import { Campaign, RootCharacter } from "../types/characters";
 import { getCampaignInfo, getCharacter, setUpdateCharacter } from "../fb/data";
 
@@ -112,7 +112,7 @@ export const store = createStore<StoreModel>({
     setCharacters: action((state, payload) => {
         state.characters = payload;
     }),
-    getCharacters: thunk((actions, _payload) => {
+    getCharacters: thunk((_actions, _payload) => {
         // console.log('[ACTION]: Get All Characters')
         // const db = getDatabase();
         // const charactersRef = ref(db, `characters/`);

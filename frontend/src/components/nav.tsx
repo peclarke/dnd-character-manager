@@ -1,5 +1,5 @@
-import { Box, Button, FormControl, InputLabel, Link, MenuItem, Select, Tooltip } from "@mui/material";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Box, Button, FormControl, Link, MenuItem, Select, Tooltip } from "@mui/material";
+import { useEffect, useState } from "react";
 import { logout } from "../fb/firebase";
 import AddIcon from '@mui/icons-material/Add';
 
@@ -71,7 +71,7 @@ import { Campaign } from "../types/characters";
 //     )    
 // }
 
-const event = new Event("newSessionNumber");
+// const event = new Event("newSessionNumber");
 
 const NewNav = () => {
     // const maxSessions = useStoreState(state => state.sessions);
@@ -121,12 +121,12 @@ const NewNav = () => {
         window.location.reload();
     }
 
-    const setNewActive = (session: number) => {
-        // localStorage.setItem('activeSession', session.toString())
-        setActive(session)
-        // black magic sorcery
-        document.dispatchEvent(event);
-    }
+    // const setNewActive = (session: number) => {
+    //     // localStorage.setItem('activeSession', session.toString())
+    //     setActive(session)
+    //     // black magic sorcery
+    //     document.dispatchEvent(event);
+    // }
 
     useEffect(() => {
         // const activeNum = localStorage.getItem('activeSession');
